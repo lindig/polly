@@ -1,0 +1,6 @@
+
+(library
+ (name            stubs)
+ (wrapped         false)
+ (libraries       unix)
+ (c_names         epoll_stubs))

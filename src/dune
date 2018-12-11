@@ -1,0 +1,6 @@
+
+(executable
+ (name main)
+ (public_name polly)
+ (libraries cmdliner stubs))
+
