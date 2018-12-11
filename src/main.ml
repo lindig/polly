@@ -1,33 +1,27 @@
 module C = Cmdliner
 
 let timeout = 2000
+let run = ref true
 
 let buf = Bytes.make 20 '@'
 
+
 let process fd events =
-  Printf.eprintf "events = %s\n" (Epoll.Events.to_string events);
-  if Epoll.Events.(events land inp <> empty) then begin
+  Printf.eprintf "events = %s\n%!" (Epoll.Events.to_string events) ;
+  if Epoll.Events.(events land inp <> empty) then
     let n = Unix.read fd buf 0 20 in
     Unix.write Unix.stdout buf 0 n |> ignore
-  end else if Epoll.Events.(events land out <> empty) then begin
+  else if Epoll.Events.(events land out <> empty) then
     Unix.write_substring fd "hello\n" 0 6 |> ignore
-  end
 
-
-let hello name =
-  let io = Unix.openfile name [Unix.O_RDONLY] 0 in
-  let rwx     = Epoll.Events.(inp lor out) in
-  let epoll   = Epoll.create () in
-  let add fd  = Epoll.add epoll fd rwx in
-  let _       = List.iter add [ Unix.stdin; io ] in
-  let rec loop = function
-    | 0 -> ()
-    | n ->
-      let ready = Epoll.wait epoll 10 timeout process in
-      Printf.eprintf "Epoll.wait = %d\n" ready;
-      loop (n-1)
-  in 
-    loop 10
+let polly files =
+  let epoll = Epoll.create () in
+  let fds = files |> List.map (fun x -> Unix.openfile x [Unix.O_RDONLY] 0) in
+  let add fd = Epoll.add epoll fd Epoll.Events.(inp) in
+  let _ = List.iter add fds in
+  while !run do
+    Epoll.wait epoll 10 timeout process |> ignore
+  done
 
 module Command = struct
   let help =
@@ -35,22 +29,21 @@ module Command = struct
     ; `S "MORE HELP"
     ; `P "Use `$(mname) $(i,COMMAND) --help' for help on a single command."
     ; `S "BUGS"
-    ; `P "Check bug reports at https://github.com/lindig/hello/issues" ]
+    ; `P "Check bug reports at https://github.com/lindig/polly/issues" ]
 
-  let name' =
+  let files =
     C.Arg.(
-      value & pos 0 string "world"
-      & info [] ~docv:"NAME"
-          ~doc:"Name of person to greet; the default is 'world'.")
+      non_empty & pos_all file []
+      & info [] ~docv:"FILE" ~doc:"Socket to read from")
 
-  let hello =
-    let doc = "Say hello to someone" in
-    C.Term.(const hello $ name', info "hello" ~doc ~man:help)
+  let polly =
+    let doc = "Read from multiple sockets" in
+    C.Term.(const polly $ files, info "polly" ~doc ~man:help)
 end
 
 let main () =
   try
-    match C.Term.eval Command.hello ~catch:false with
+    match C.Term.eval Command.polly ~catch:false with
     | `Error _ -> exit 1
     | _ -> exit 0
   with exn ->
