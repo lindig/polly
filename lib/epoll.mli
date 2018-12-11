@@ -21,7 +21,8 @@ val create : unit -> Unix.file_descr
 
 val add : Unix.file_descr -> Unix.file_descr -> Events.t -> unit
 
-val del : Unix.file_descr -> Unix.file_descr -> Events.t -> unit
+val del : Unix.file_descr -> Unix.file_descr -> unit
 
 val wait :
-  Unix.file_descr -> int -> int -> (Unix.file_descr -> Events.t -> unit) -> int
+  Unix.file_descr -> int -> int ->
+    (Unix.file_descr -> Unix.file_descr -> Events.t -> unit) -> int

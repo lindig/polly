@@ -58,11 +58,11 @@ external caml_epoll_wait :
      Unix.file_descr (* epoll fd *)
   -> int (* max number of fds handled *)
   -> int (* timeout in ms *)
-  -> (Unix.file_descr -> Events.t -> unit)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
   -> int (* actual number of ready fds; 0 = timeout *)
   = "caml_epoll_wait"
 
-let add = caml_epoll_add
-let del = caml_epoll_del
 let create = caml_epoll_create1
+let add = caml_epoll_add
+let del t fd = caml_epoll_del t fd Events.empty
 let wait = caml_epoll_wait

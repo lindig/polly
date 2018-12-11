@@ -6,13 +6,15 @@ let run = ref true
 let buf = Bytes.make 20 '@'
 
 
-let process fd events =
+let process epoll fd events =
   Printf.eprintf "events = %s\n%!" (Epoll.Events.to_string events) ;
   if Epoll.Events.(events land inp <> empty) then
     let n = Unix.read fd buf 0 20 in
     Unix.write Unix.stdout buf 0 n |> ignore
   else if Epoll.Events.(events land out <> empty) then
     Unix.write_substring fd "hello\n" 0 6 |> ignore
+  else if Epoll.Events.(events land hup <> empty) then
+    Epoll.del epoll fd
 
 let polly files =
   let epoll = Epoll.create () in

@@ -90,7 +90,8 @@ caml_epoll_wait(value val_epfd, value val_max, value val_timeout, value val_f)
 		uerror("epoll_wait", Nothing);
 
 	for (i = 0; i < ready; i++) {
-		ignore = caml_callback2(val_f,
+		ignore = caml_callback3(val_f,
+          val_epfd,
 					Val_int(events[i].data.fd),
 					Val_int(events[i].events));
 	}
