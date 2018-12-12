@@ -33,10 +33,10 @@ module Events : sig
   val err : t
   val hup : t
   val rdhup : t
-  val exclusive : t
   val wakeup : t
   val oneshot : t
   val et : t
+  (* val exclusive : t *)
 
   val ( lor ) : t -> t -> t
   (** join sets *)

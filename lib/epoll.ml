@@ -12,10 +12,11 @@ module Events = struct
   external epoll_ERR : unit -> t = "caml_epoll_EPOLLERR"
   external epoll_HUP : unit -> t = "caml_epoll_EPOLLHUP"
   external epoll_RDHUP : unit -> t = "caml_epoll_EPOLLRDHUP"
-  external epoll_EXCLUSIVE : unit -> t = "caml_epoll_EPOLLEXCLUSIVE"
   external epoll_WAKEUP : unit -> t = "caml_epoll_EPOLLWAKEUP"
   external epoll_ONESHOT : unit -> t = "caml_epoll_EPOLLONESHOT"
   external epoll_ET : unit -> t = "caml_epoll_EPOLLET"
+
+  (* external epoll_EXCLUSIVE : unit -> t = "caml_epoll_EPOLLEXCLUSIVE" *)
 
   let inp = epoll_IN ()
   let pri = epoll_PRI ()
@@ -28,10 +29,12 @@ module Events = struct
   let err = epoll_ERR ()
   let hup = epoll_HUP ()
   let rdhup = epoll_RDHUP ()
-  let exclusive = epoll_EXCLUSIVE ()
   let wakeup = epoll_WAKEUP ()
   let oneshot = epoll_ONESHOT ()
   let et = epoll_ET ()
+
+
+  (* let exclusive = epoll_EXCLUSIVE () *)
 
   let empty = 0
 
@@ -47,7 +50,7 @@ module Events = struct
     ; (err, "err")
     ; (hup, "hup")
     ; (rdhup, "rdhup")
-    ; (exclusive, "exclusive")
+(*  ; (exclusive, "exclusive") *)
     ; (wakeup, "wakeup")
     ; (oneshot, "oneshot")
     ; (et, "et") ]
