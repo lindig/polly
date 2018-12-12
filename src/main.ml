@@ -1,24 +1,20 @@
-module C     = Cmdliner
+module C = Cmdliner
 module Epoll = Polly.Epoll
 
 let timeout = 2000
+
 let run = ref true
 
 let buf = Bytes.make 20 '@'
 
-
 let process _epoll fd events =
   Printf.eprintf "events = %s\n%!" (Epoll.Events.to_string events) ;
-  if Epoll.Events.(events land inp <> empty) then begin
+  ( if Epoll.Events.(events land inp <> empty) then
     let n = Unix.read fd buf 0 20 in
-    Unix.write Unix.stdout buf 0 n |> ignore
-  end;
-  if Epoll.Events.(events land out <> empty) then begin
-    Unix.write_substring fd "hello\n" 0 6 |> ignore
-  end;
-  if Epoll.Events.(events land hup <> empty) then begin
-    Unix.close fd;
-  end
+    Unix.write Unix.stdout buf 0 n |> ignore ) ;
+  if Epoll.Events.(events land out <> empty) then
+    Unix.write_substring fd "hello\n" 0 6 |> ignore ;
+  if Epoll.Events.(events land hup <> empty) then Unix.close fd
 
 let polly files =
   let epoll = Epoll.create () in
@@ -26,14 +22,13 @@ let polly files =
   let add fd = Epoll.add epoll fd Epoll.Events.(inp) in
   let _ = List.iter add fds in
   while !run do
-    Epoll.wait epoll 10 timeout process |> ignore;
+    Epoll.wait epoll 10 timeout process |> ignore
   done
 
 module Command = struct
   let help =
     [ `S "BUGS"
-    ; `P "Check bug reports at https://github.com/lindig/polly/issues"
-    ]
+    ; `P "Check bug reports at https://github.com/lindig/polly/issues" ]
 
   let files =
     C.Arg.(

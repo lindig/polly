@@ -4,7 +4,7 @@
 #
 
 DUNE 		= dune
-SRC   	= find . -not \( -path ./_build -prune \) -type f -name '*ml*'
+SRC   	= find . -not \( -path ./_build -prune \) -type f -name '*.ml*'
 PROFILE = dev
 
 .PHONY: all install test clean
