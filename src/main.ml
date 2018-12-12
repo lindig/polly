@@ -9,12 +9,12 @@ let buf = Bytes.make 20 '@'
 
 let process _epoll fd events =
   Printf.eprintf "events = %s\n%!" (Epoll.Events.to_string events) ;
-  ( if Epoll.Events.(events land inp <> empty) then
+  ( if Epoll.Events.(test events inp) then
     let n = Unix.read fd buf 0 20 in
     Unix.write Unix.stdout buf 0 n |> ignore ) ;
-  if Epoll.Events.(events land out <> empty) then
+  if Epoll.Events.(test events out) then
     Unix.write_substring fd "hello\n" 0 6 |> ignore ;
-  if Epoll.Events.(events land hup <> empty) then Unix.close fd
+  if Epoll.Events.(test events hup) then Unix.close fd
 
 let polly files =
   let epoll = Epoll.create () in

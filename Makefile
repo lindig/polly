@@ -7,7 +7,7 @@ DUNE 		= dune
 SRC   	= find . -not \( -path ./_build -prune \) -type f -name '*.ml*'
 PROFILE = dev
 
-.PHONY: all install test clean
+.PHONY: all install test clean format
 
 all:
 	$(DUNE) build --profile=$(PROFILE)
@@ -20,4 +20,5 @@ clean:
 
 format:
 	$(SRC) | xargs ocamlformat -i
+	indent -linux lib/epoll_stubs.c
 

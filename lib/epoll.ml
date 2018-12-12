@@ -2,63 +2,35 @@ module Events = struct
   type t = int
 
   external epoll_IN : unit -> t = "caml_epoll_EPOLLIN"
-
   external epoll_PRI : unit -> t = "caml_epoll_EPOLLPRI"
-
   external epoll_OUT : unit -> t = "caml_epoll_EPOLLOUT"
-
   external epoll_RDNORM : unit -> t = "caml_epoll_EPOLLRDNORM"
-
   external epoll_RDBAND : unit -> t = "caml_epoll_EPOLLRDBAND"
-
   external epoll_WRNORM : unit -> t = "caml_epoll_EPOLLWRNORM"
-
   external epoll_WRBAND : unit -> t = "caml_epoll_EPOLLWRBAND"
-
   external epoll_MSG : unit -> t = "caml_epoll_EPOLLMSG"
-
   external epoll_ERR : unit -> t = "caml_epoll_EPOLLERR"
-
   external epoll_HUP : unit -> t = "caml_epoll_EPOLLHUP"
-
   external epoll_RDHUP : unit -> t = "caml_epoll_EPOLLRDHUP"
-
   external epoll_EXCLUSIVE : unit -> t = "caml_epoll_EPOLLEXCLUSIVE"
-
   external epoll_WAKEUP : unit -> t = "caml_epoll_EPOLLWAKEUP"
-
   external epoll_ONESHOT : unit -> t = "caml_epoll_EPOLLONESHOT"
-
   external epoll_ET : unit -> t = "caml_epoll_EPOLLET"
 
   let inp = epoll_IN ()
-
   let pri = epoll_PRI ()
-
   let out = epoll_OUT ()
-
   let rdnorm = epoll_RDNORM ()
-
   let rdband = epoll_RDBAND ()
-
   let wrnorm = epoll_WRNORM ()
-
   let wrband = epoll_WRBAND ()
-
   let msg = epoll_MSG ()
-
   let err = epoll_ERR ()
-
   let hup = epoll_HUP ()
-
   let rdhup = epoll_RDHUP ()
-
   let exclusive = epoll_EXCLUSIVE ()
-
   let wakeup = epoll_WAKEUP ()
-
   let oneshot = epoll_ONESHOT ()
-
   let et = epoll_ET ()
 
   let empty = 0
@@ -91,6 +63,8 @@ module Events = struct
       if t land event <> empty then str :: result else result
     in
     List.fold_left add [] all |> String.concat " "
+
+  let test x y = x land y <> empty
 end
 
 external caml_epoll_add :

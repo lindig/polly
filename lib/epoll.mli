@@ -2,35 +2,20 @@ module Events : sig
   type t
 
   val empty : t
-
   val inp : t
-
   val pri : t
-
   val out : t
-
   val rdnorm : t
-
   val rdband : t
-
   val wrnorm : t
-
   val wrband : t
-
   val msg : t
-
   val err : t
-
   val hup : t
-
   val rdhup : t
-
   val exclusive : t
-
   val wakeup : t
-
   val oneshot : t
-
   val et : t
 
   val ( lor ) : t -> t -> t
@@ -39,6 +24,7 @@ module Events : sig
 
   val lnot : t -> t
 
+  val test : t -> t -> bool
   val to_string : t -> string
 end
 
