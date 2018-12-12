@@ -1,5 +1,4 @@
 
-
 #include <sys/epoll.h>
 #include <errno.h>
 #include <sys/resource.h>
@@ -19,14 +18,14 @@
 #define CONSTANT(name,i) \
   CAMLprim value name(value unit) { return Val_int(i); }
 
-CONSTANT(caml_epoll_EPOLLIN, EPOLLIN)
-CONSTANT(caml_epoll_EPOLLOUT, EPOLLOUT)
-CONSTANT(caml_epoll_EPOLLRDHUP, EPOLLRDHUP)
-CONSTANT(caml_epoll_EPOLLPRI, EPOLLPRI)
-CONSTANT(caml_epoll_EPOLLERR, EPOLLERR)
-CONSTANT(caml_epoll_EPOLLHUP, EPOLLHUP)
-CONSTANT(caml_epoll_EPOLLET, EPOLLET)
-CONSTANT(caml_epoll_EPOLLONESHOT, EPOLLONESHOT)
+CONSTANT(caml_epoll_EPOLLIN, EPOLLIN);
+CONSTANT(caml_epoll_EPOLLOUT, EPOLLOUT);
+CONSTANT(caml_epoll_EPOLLRDHUP, EPOLLRDHUP);
+CONSTANT(caml_epoll_EPOLLPRI, EPOLLPRI);
+CONSTANT(caml_epoll_EPOLLERR, EPOLLERR);
+CONSTANT(caml_epoll_EPOLLHUP, EPOLLHUP);
+CONSTANT(caml_epoll_EPOLLET, EPOLLET);
+CONSTANT(caml_epoll_EPOLLONESHOT, EPOLLONESHOT);
 
 CAMLprim value caml_epoll_create1(value val_unit)
 {
@@ -91,10 +90,12 @@ caml_epoll_wait(value val_epfd, value val_max, value val_timeout, value val_f)
 
 	for (i = 0; i < ready; i++) {
 		ignore = caml_callback3(val_f,
-          val_epfd,
+					val_epfd,
 					Val_int(events[i].data.fd),
 					Val_int(events[i].events));
 	}
 
 	CAMLreturn(Val_int(ready));
 }
+
+/* vim: set ts=8 noet: */
