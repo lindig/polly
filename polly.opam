@@ -11,6 +11,8 @@ build: [
 ]
 depends: [
   "dune"    {build}
+  "ocaml"
 	"cmdliner"
+  "base-unix"
 ]
 synopsis: "Bindings for the Linux epoll system call"
