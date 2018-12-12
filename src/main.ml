@@ -1,4 +1,5 @@
-module C = Cmdliner
+module C     = Cmdliner
+module Epoll = Polly.Epoll
 
 let timeout = 2000
 let run = ref true

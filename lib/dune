@@ -2,6 +2,5 @@
 (library
  (name            polly)
  (public_name     polly)
- (wrapped         false)
  (libraries       unix)
  (c_names         epoll_stubs))
