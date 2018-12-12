@@ -6,15 +6,18 @@ let run = ref true
 let buf = Bytes.make 20 '@'
 
 
-let process epoll fd events =
+let process _epoll fd events =
   Printf.eprintf "events = %s\n%!" (Epoll.Events.to_string events) ;
-  if Epoll.Events.(events land inp <> empty) then
+  if Epoll.Events.(events land inp <> empty) then begin
     let n = Unix.read fd buf 0 20 in
     Unix.write Unix.stdout buf 0 n |> ignore
-  else if Epoll.Events.(events land out <> empty) then
+  end;
+  if Epoll.Events.(events land out <> empty) then begin
     Unix.write_substring fd "hello\n" 0 6 |> ignore
-  else if Epoll.Events.(events land hup <> empty) then
-    Epoll.del epoll fd
+  end;
+  if Epoll.Events.(events land hup <> empty) then begin
+    Unix.close fd;
+  end
 
 let polly files =
   let epoll = Epoll.create () in
@@ -22,16 +25,14 @@ let polly files =
   let add fd = Epoll.add epoll fd Epoll.Events.(inp) in
   let _ = List.iter add fds in
   while !run do
-    Epoll.wait epoll 10 timeout process |> ignore
+    Epoll.wait epoll 10 timeout process |> ignore;
   done
 
 module Command = struct
   let help =
-    [ `P "These options are common to all commands."
-    ; `S "MORE HELP"
-    ; `P "Use `$(mname) $(i,COMMAND) --help' for help on a single command."
-    ; `S "BUGS"
-    ; `P "Check bug reports at https://github.com/lindig/polly/issues" ]
+    [ `S "BUGS"
+    ; `P "Check bug reports at https://github.com/lindig/polly/issues"
+    ]
 
   let files =
     C.Arg.(
