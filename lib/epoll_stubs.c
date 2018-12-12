@@ -80,6 +80,9 @@ caml_epoll_wait(value val_epfd, value val_max, value val_timeout, value val_f)
 	struct epoll_event events[Int_val(val_max)];
 	int ready, i;
 
+	if (Int_val(val_max) <= 0)
+		uerror("epoll_wait", Nothing);
+
 	caml_enter_blocking_section();
 	ready = epoll_wait(Int_val(val_epfd), events, Int_val(val_max),
 			   Int_val(val_timeout));
