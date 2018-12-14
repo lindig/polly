@@ -1,18 +1,16 @@
-opam-version:   "2.0"
-name:           "polly"
-maintainer:     "Christian Lindig <christian.lindig@citrix.com>"
-authors:        "Christian Lindig <christian.lindig@citrix.com>"
-homepage:       "https://github.com/lindig/polly"
-bug-reports:    "https://github.com/lindig/polly/issues"
-license:        "MIT"
-dev-repo:       "git://github.com/lindig/polly.git"
-build: [
-  ["dune" "build" "-j" jobs "@install"]
-]
+opam-version: "2.0"
+name: "polly"
+synopsis: "Bindings for the Linux epoll system call"
+maintainer: "Christian Lindig <christian.lindig@citrix.com>"
+authors: "Christian Lindig <christian.lindig@citrix.com>"
+license: "MIT"
+homepage: "https://github.com/lindig/polly"
+bug-reports: "https://github.com/lindig/polly/issues"
 depends: [
-  "dune"    {build}
+  "dune" {build}
   "ocaml"
-	"cmdliner"
+  "cmdliner"
   "base-unix"
 ]
-synopsis: "Bindings for the Linux epoll system call"
+build: ["dune" "build" "-j" jobs "@install"]
+dev-repo: "git://github.com/lindig/polly.git"
