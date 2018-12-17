@@ -79,11 +79,12 @@ val wait :
   -> int (* fds processed, 0 = timeout was reached *)
   (** [wait epoll max timeout f] waits for events on the fds registered
    * with [epoll] to happen or to return after [timeout]. When fds are
-   * found to be ready, [wait] iterates over them by calling [f epoll fd
-   * events]. [f] receives [epoll], the [fd] being monitored, and the
-   * [events]. At most [max] fds are being iterated over by a call to
-   * [wait]. Note that still more than [max] fds could be ready to be
-   * processed - they would be handled by the next call to [wait].
+   * found to be ready, [wait] iterates over them by calling
+   * [f epoll fd events]. [f] receives [epoll], the [fd] being
+   * monitored, and the [events]. At most [max] fds are being iterated
+   * over by a call to [wait]. Note that still more than [max] fds could
+   * be ready to be processed - they would be handled by the next call
+   * to [wait].
    *
    * It is important to address the events that trigger an fd to be
    * handled as otherwise the same fd will be handled again at the next
