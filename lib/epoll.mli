@@ -11,9 +11,11 @@ val create : unit -> Unix.file_descr
  *)
 
 module Events : sig
-  type t  (** a set of events *)
+  type t
+  (** a set of events *)
 
-  val empty : t (** empty set *)
+  val empty : t
+  (** empty set *)
 
   (* The values below define singleton sets containing exactly one
    * event like [inp] (input) or [hup]. See epoll_ctl(2) for the events
@@ -21,21 +23,35 @@ module Events : sig
    * [lor] (join) and compared using [(=)].
    *)
 
-  val inp : t (** called "in" in Linux; "in" is an OCaml keyword  *)
+  val inp : t
+  (** called "in" in Linux; "in" is an OCaml keyword  *)
 
   val pri : t
+
   val out : t
+
   val rdnorm : t
+
   val rdband : t
+
   val wrnorm : t
+
   val wrband : t
+
   val msg : t
+
   val err : t
+
   val hup : t
+
   val rdhup : t
+
   val wakeup : t
+
   val oneshot : t
+
   val et : t
+
   (* val exclusive : t *)
 
   val ( lor ) : t -> t -> t
@@ -72,12 +88,13 @@ val del : Unix.file_descr -> Unix.file_descr -> unit
 (** [del epoll fd] unregister [fd] fro [epoll] *)
 
 val wait :
-     Unix.file_descr (* epoll *)
-  -> int (* max fds to handle *)
-  -> int (* timeout in milliseconds *)
-  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit) (* callback *)
-  -> int (* fds processed, 0 = timeout was reached *)
-  (** [wait epoll max timeout f] waits for events on the fds registered
+  Unix.file_descr (* epoll *) ->
+  int (* max fds to handle *) ->
+  int (* timeout in milliseconds *) ->
+  (Unix.file_descr -> Unix.file_descr -> Events.t -> unit) ->
+  (* callback *)
+  int
+(** [wait epoll max timeout f] waits for events on the fds registered
    * with [epoll] to happen or to return after [timeout]. When fds are
    * found to be ready, [wait] iterates over them by calling
    * [f epoll fd events]. [f] receives [epoll], the [fd] being
@@ -91,3 +108,5 @@ val wait :
    * call to [wait], leading to a tight loop. This is worth checking
    * using strace(1).
    *)
+
+(* fds processed, 0 = timeout was reached *)
