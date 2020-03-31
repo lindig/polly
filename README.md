@@ -1,7 +1,7 @@
 
 [![Build Status](https://travis-ci.org/lindig/polly.svg?branch=master)](https://travis-ci.org/lindig/polly)
 
-# Polly (Work in Progress)
+# Polly
 
 Polly is an [OCaml] binding for the Linux [epoll] system call:
 

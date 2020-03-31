@@ -3,7 +3,7 @@
 # convenience during development
 #
 
-DUNE 		= dune
+DUNE 	= dune
 PROFILE = dev
 
 .PHONY: all install test clean format lint release
@@ -30,3 +30,4 @@ release:
 	dune-release distrib
 	dune-release opam pkg
 
+# vim:ts=8:noet:
