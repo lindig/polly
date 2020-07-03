@@ -1,6 +1,7 @@
-
 (library
- (name            polly)
- (public_name     polly)
- (libraries       unix)
- (c_names         epoll_stubs))
+ (name polly)
+ (public_name polly)
+ (libraries unix)
+ (foreign_stubs
+  (language c)
+  (names epoll_stubs)))

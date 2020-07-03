@@ -65,20 +65,20 @@ module Events = struct
 
   let all =
     [
-      (inp, "in");
-      (pri, "pri");
-      (out, "out");
-      (rdnorm, "rdnorm");
-      (rdband, "rdband");
-      (wrnorm, "wrnorm");
-      (wrband, "wrband");
-      (msg, "msg");
-      (err, "err");
-      (hup, "hup");
-      (rdhup, "rdhup") (*  ; (exclusive, "exclusive") *);
-      (wakeup, "wakeup");
-      (oneshot, "oneshot");
-      (et, "et");
+      (inp, "in")
+    ; (pri, "pri")
+    ; (out, "out")
+    ; (rdnorm, "rdnorm")
+    ; (rdband, "rdband")
+    ; (wrnorm, "wrnorm")
+    ; (wrband, "wrband")
+    ; (msg, "msg")
+    ; (err, "err")
+    ; (hup, "hup")
+    ; (rdhup, "rdhup") (*  ; (exclusive, "exclusive") *)
+    ; (wakeup, "wakeup")
+    ; (oneshot, "oneshot")
+    ; (et, "et")
     ]
 
   let ( lor ) = ( lor )
@@ -108,11 +108,11 @@ external caml_epoll_mod : Unix.file_descr -> Unix.file_descr -> Events.t -> unit
 external caml_epoll_create1 : unit -> Unix.file_descr = "caml_epoll_create1"
 
 external caml_epoll_wait :
-  Unix.file_descr (* epoll fd *) ->
-  int (* max number of fds handled *) ->
-  int (* timeout in ms *) ->
-  (Unix.file_descr -> Unix.file_descr -> Events.t -> unit) ->
-  int (* actual number of ready fds; 0 = timeout *) = "caml_epoll_wait"
+     Unix.file_descr (* epoll fd *)
+  -> int (* max number of fds handled *)
+  -> int (* timeout in ms *)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
+  -> int (* actual number of ready fds; 0 = timeout *) = "caml_epoll_wait"
 
 let create = caml_epoll_create1
 

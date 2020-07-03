@@ -11,8 +11,8 @@ val create : unit -> Unix.file_descr
  *)
 
 module Events : sig
-  type t
   (** a set of events *)
+  type t
 
   val empty : t
   (** empty set *)
@@ -88,12 +88,12 @@ val del : Unix.file_descr -> Unix.file_descr -> unit
 (** [del epoll fd] unregister [fd] fro [epoll] *)
 
 val wait :
-  Unix.file_descr (* epoll *) ->
-  int (* max fds to handle *) ->
-  int (* timeout in milliseconds *) ->
-  (Unix.file_descr -> Unix.file_descr -> Events.t -> unit) ->
-  (* callback *)
-  int
+     Unix.file_descr (* epoll *)
+  -> int (* max fds to handle *)
+  -> int (* timeout in milliseconds *)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
+  -> (* callback *)
+     int
 (** [wait epoll max timeout f] waits for events on the fds registered
    * with [epoll] to happen or to return after [timeout]. When fds are
    * found to be ready, [wait] iterates over them by calling

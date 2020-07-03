@@ -18,7 +18,7 @@ clean:
 	$(DUNE) clean
 
 format:
-	ocamlformat -i $$(git ls-files '*.ml*')
+	dune build @fmt --auto-promote
 	indent -linux lib/epoll_stubs.c
 
 lint:
