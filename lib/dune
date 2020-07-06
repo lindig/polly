@@ -4,4 +4,4 @@
  (libraries unix)
  (foreign_stubs
   (language c)
-  (names epoll_stubs)))
+  (names polly_stubs)))

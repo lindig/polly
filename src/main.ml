@@ -1,5 +1,4 @@
 module C = Cmdliner
-module Epoll = Polly.Epoll
 
 let timeout = 2000
 
@@ -14,36 +13,36 @@ let create_socket path =
 
 let accept epoll sock =
   let fd, _ = Unix.accept sock in
-  Epoll.add epoll fd Epoll.Events.(inp)
+  Polly.add epoll fd Polly.Events.(inp)
 
-let ( +++ ) = Epoll.Events.( lor )
+let ( +++ ) = Polly.Events.( lor )
 
-let ready = Epoll.Events.(inp +++ hup)
+let ready = Polly.Events.(inp +++ hup)
 
-let other = Epoll.Events.(lnot ready)
+let other = Polly.Events.(lnot ready)
 
 let process sock epoll fd events =
-  if fd = sock && Epoll.Events.(test events inp) then
+  if fd = sock && Polly.Events.(test events inp) then
     accept epoll sock
   else (
-    ( if Epoll.Events.(test events ready) then
+    ( if Polly.Events.(test events ready) then
         match Unix.read fd buf 0 20 with
         | 0 ->
             Unix.close fd
         | n ->
             Unix.write Unix.stdout buf 0 n |> ignore
     ) ;
-    if Epoll.Events.(test events other) then Unix.close fd
+    if Polly.Events.(test events other) then Unix.close fd
   )
 
 let polly path =
-  let epoll = Epoll.create () in
+  let epoll = Polly.create () in
   let sock = create_socket path in
   let clean () = try Unix.unlink path with _ -> () in
   at_exit clean ;
-  Epoll.add epoll sock Epoll.Events.(inp) ;
+  Polly.add epoll sock Polly.Events.(inp) ;
   while !run do
-    match Epoll.wait epoll 10 timeout (process sock) with
+    match Polly.wait epoll 10 timeout (process sock) with
     | _ ->
         ()
     | exception Unix.Unix_error (Unix.EINTR, _, _) ->
