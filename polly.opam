@@ -9,8 +9,8 @@ maintainer: "Christian Lindig <christian.lindig@citrix.com>"
 authors: "Christian Lindig <christian.lindig@citrix.com>"
 license: "MIT"
 homepage: "https://github.com/lindig/polly"
+doc: "https://github.com/lindig/polly"
 bug-reports: "https://github.com/lindig/polly/issues"
-doc: "https://lindig.github.io/poll/"
 depends: [
   "dune" {build}
   "ocaml"
