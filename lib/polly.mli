@@ -4,7 +4,9 @@
   interested in.
  *)
 
-val create : unit -> Unix.file_descr
+type t
+
+val create : unit -> t
 (** [create ()] returns an epoll(2) file descriptor which is passed
  * later to [wait], [add], [upd], and [del]. It must be passed to
  * [Unix.close] when no longer needed.
@@ -74,26 +76,19 @@ module Events : sig
   (** [to_string t] return a string representation of [t] for debugging *)
 end
 
-val add : Unix.file_descr -> Unix.file_descr -> Events.t -> unit
+val add : t -> Unix.file_descr -> Events.t -> unit
 (** [add epoll fd events] registers [fd] with [epoll] to monitor for
  * [events]
  *)
 
-val upd : Unix.file_descr -> Unix.file_descr -> Events.t -> unit
+val upd : t -> Unix.file_descr -> Events.t -> unit
 (** [upd epoll fd events] updates the events set of [fd] where [fd] has
  * been previously been registered. [upd] is called [mod] in the Linux
  * documentation but [mod] is already an infix operator in OCaml. *)
 
-val del : Unix.file_descr -> Unix.file_descr -> unit
+val del : t -> Unix.file_descr -> unit
 (** [del epoll fd] unregister [fd] fro [epoll] *)
 
-val wait :
-     Unix.file_descr (* epoll *)
-  -> int (* max fds to handle *)
-  -> int (* timeout in milliseconds *)
-  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
-  -> (* callback *)
-     int
 (** [wait epoll max timeout f] waits for events on the fds registered
    * with [epoll] to happen or to return after [timeout]. When fds are
    * found to be ready, [wait] iterates over them by calling
@@ -107,6 +102,14 @@ val wait :
    * handled as otherwise the same fd will be handled again at the next
    * call to [wait], leading to a tight loop. This is worth checking
    * using strace(1).
+   *
+   * See the epoll_wait(2) manual page for the details of the system
+   * call.
    *)
-
-(* fds processed, 0 = timeout was reached *)
+val wait :
+     t (** epoll *)
+  -> int (** max fds to handle *)
+  -> int (** timeout in milliseconds: -1 = wait forever *)
+  -> (t -> Unix.file_descr -> Events.t -> unit)
+  -> int
+(** number of fds ready, 0 = timeout *)
