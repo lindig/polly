@@ -17,5 +17,5 @@ depends: [
   "cmdliner"
   "base-unix"
 ]
-build: ["dune" "build" "-j" jobs "@install"]
+build: ["dune" "build" "-p" name "-j" jobs "@install"]
 dev-repo: "git://github.com/lindig/polly.git"
