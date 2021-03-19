@@ -6,8 +6,11 @@
 Polly is an [OCaml] binding for the Linux [epoll] system call:
 
 * Small, simple, and self-contained
-* Avoids most allocation in the event loop 
+* Avoids most allocation in the event loop
 * MIT licensed
+
+Note that [epoll] is specific to Linux and that this library won't
+compile on macOS, for example.
 
 # Other Epoll Bindings
 
