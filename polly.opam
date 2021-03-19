@@ -18,4 +18,5 @@ depends: [
   "base-unix"
 ]
 build: ["dune" "build" "-p" name "-j" jobs "@install"]
+depexts: "conf-linux-libc-dev"
 dev-repo: "git://github.com/lindig/polly.git"
