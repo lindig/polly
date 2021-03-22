@@ -12,6 +12,15 @@ Polly is an [OCaml] binding for the Linux [epoll] system call:
 Note that [epoll] is specific to Linux and that this library won't
 compile on macOS, for example.
 
+# Installation
+
+As of version 0.2.2, Polly is now in [Opam] and can be installed from
+there:
+
+```
+opam install polly
+```
+
 # Other Epoll Bindings
 
 * [OCaml Backpack](https://github.com/jimenezrick/ocaml-backpack/)
@@ -25,3 +34,4 @@ requests for improvements you made.
 [Travis]: https://www.travis-ci.org/
 [OCaml]:  https://www.ocaml.org/
 [epoll]:  http://man7.org/linux/man-pages/man2/epoll_wait.2.html
+[Opam]:   http://opam.ocaml.org/
