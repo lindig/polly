@@ -59,24 +59,19 @@ module Command = struct
     C.Arg.(
       value
       & pos 0 string "polly.sock"
-      & info [] ~docv:"FILE" ~doc:"Socket to read from")
+      & info [] ~docv:"FILE" ~doc:"Socket to read from"
+    )
 
   let polly =
     let doc = "Read from multiple connections, write to stdout" in
-    C.Term.(const polly $ path, info "polly" ~doc ~man:help)
+    let info = C.Cmd.info "polly" ~doc ~man:help in
+    C.(Cmd.v info Term.(const polly $ path))
 end
 
 let main () =
   let signal _ = exit 1 in
   Sys.set_signal Sys.sigterm (Sys.Signal_handle signal) ;
   Sys.set_signal Sys.sigint (Sys.Signal_handle signal) ;
-  match C.Term.eval Command.polly ~catch:false with
-  | `Error _ ->
-      exit 1
-  | _ ->
-      exit 0
-  | exception exn ->
-      Printf.eprintf "error: %s\n" (Printexc.to_string exn) ;
-      exit 1
+  C.Cmd.eval Command.polly
 
-let () = if !Sys.interactive then () else main ()
+let () = if !Sys.interactive then () else main () |> exit
