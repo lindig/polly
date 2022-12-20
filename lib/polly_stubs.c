@@ -119,4 +119,39 @@ caml_polly_wait(value val_epfd, value val_max, value val_timeout, value val_f)
 	CAMLreturn(Val_int(ready));
 }
 
+CAMLprim value
+caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
+		     value val_init, value val_f)
+{
+	CAMLparam5(val_epfd, val_max, val_timeout, val_init, val_f);
+	value args[4];
+
+	struct epoll_event *events;
+	int ready, i;
+
+	if (Int_val(val_max) <= 0)
+		uerror(__FUNCTION__, Nothing);
+	events =
+	    (struct epoll_event *)alloca(Int_val(val_max) *
+					 sizeof(struct epoll_event));
+
+	caml_enter_blocking_section();
+	ready = epoll_wait(Int_val(val_epfd), events, Int_val(val_max),
+			   Int_val(val_timeout));
+	caml_leave_blocking_section();
+
+	if (ready == -1)
+		uerror(__FUNCTION__, Nothing);
+
+	args[0] = val_epfd;
+	args[3] = val_init;
+	for (i = 0; i < ready; i++) {
+		args[1] = Val_int(events[i].data.fd);
+		args[2] = Val_int(events[i].events);
+		args[3] = caml_callbackN(val_f, 4, args);
+	}
+
+	CAMLreturn(args[3]);
+}
+
 /* vim: set ts=8 noet: */
