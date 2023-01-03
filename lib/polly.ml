@@ -116,6 +116,14 @@ external caml_polly_wait :
   -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
   -> int (* actual number of ready fds; 0 = timeout *) = "caml_polly_wait"
 
+external caml_polly_wait_fold :
+     t (* epoll fd *)
+  -> int (* max number of fds handled *)
+  -> int (* timeout in ms *)
+  -> 'a (* initial value *)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> 'a -> 'a)
+  -> 'a (* final value *) = "caml_polly_wait_fold"
+
 let create = caml_polly_create1
 
 let close t = Unix.close t
@@ -127,3 +135,5 @@ let del t fd = caml_polly_del t fd Events.empty
 let upd = caml_polly_mod
 
 let wait = caml_polly_wait
+
+let wait_fold = caml_polly_wait_fold

@@ -116,3 +116,16 @@ val wait :
   -> (t -> Unix.file_descr -> Events.t -> unit)
   -> int
 (** number of fds ready, 0 = timeout *)
+
+(** [wait_fold epoll max timeout init f] works similar to [wait] except that
+    function f additionally receives and produces a value of type ['a]
+    that is threaded through the invocations of [f]]; the final value
+    is returned. *)
+
+val wait_fold :
+     t (** epoll *)
+  -> int (** max fds to handle *)
+  -> int (** timeout in milliseconds: -1 = wait forever *)
+  -> 'a (* initial value passed to f below *)
+  -> (t -> Unix.file_descr -> Events.t -> 'a -> 'a)
+  -> 'a

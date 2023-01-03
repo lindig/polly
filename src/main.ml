@@ -21,10 +21,10 @@ let ready = Polly.Events.(inp +++ hup)
 
 let other = Polly.Events.(lnot ready)
 
-let process sock epoll fd events =
-  if fd = sock && Polly.Events.(test events inp) then
-    accept epoll sock
-  else (
+let process sock epoll fd events count =
+  if fd = sock && Polly.Events.(test events inp) then (
+    accept epoll sock ; count
+  ) else (
     ( if Polly.Events.(test events ready) then
         match Unix.read fd buf 0 20 with
         | 0 ->
@@ -32,7 +32,8 @@ let process sock epoll fd events =
         | n ->
             Unix.write Unix.stdout buf 0 n |> ignore
     ) ;
-    if Polly.Events.(test events other) then Unix.close fd
+    if Polly.Events.(test events other) then Unix.close fd ;
+    count + 1
   )
 
 let polly path =
@@ -42,7 +43,7 @@ let polly path =
   at_exit clean ;
   Polly.add epoll sock Polly.Events.(inp) ;
   while !run do
-    match Polly.wait epoll 10 timeout (process sock) with
+    match Polly.wait_fold epoll 10 timeout 0 (process sock) with
     | _ ->
         ()
     | exception Unix.Unix_error (Unix.EINTR, _, _) ->
