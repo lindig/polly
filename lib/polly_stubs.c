@@ -124,13 +124,17 @@ caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 		     value val_init, value val_f)
 {
 	CAMLparam5(val_epfd, val_max, val_timeout, val_init, val_f);
-	value args[4];
+	value args[4];		/* must not be CAMLlocalN */
+
+	/* see
+	 * https://github.com/ocaml/ocaml/commit/9acf32acf8843db4083c92a0200309fa51d0e4d1
+	 */
 
 	struct epoll_event *events;
 	int ready, i;
 
 	if (Int_val(val_max) <= 0)
-		uerror(__FUNCTION__, Nothing);
+		caml_invalid_argument(__FUNCTION__);
 	events =
 	    (struct epoll_event *)alloca(Int_val(val_max) *
 					 sizeof(struct epoll_event));
