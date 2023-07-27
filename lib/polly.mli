@@ -7,9 +7,9 @@
 type t
 
 val create : unit -> t
-(** [create ()] returns an epoll(2) file descriptor which is passed
-    later to [wait], [add], [upd], and [del]. It must be passed to
-    [close] when no longer needed.
+(** [create ()] returns an [epoll(2)] file descriptor which is passed
+    later to {!val:wait}, {!val:add}, {!val:upd}, and {!val:del}. It must be passed to
+    {!val:close} when no longer needed.
 *)
 
 val close : t -> unit
@@ -23,10 +23,10 @@ module Events : sig
   (** empty set *)
 
   (** The values below define singleton sets containing exactly one
-      event like [inp] (input) or [hup]. See epoll_ctl(2) for the events
-      available. Sets can be combined using [land] (intersection) and
-      [lor] (join) and compared using [(=)].
-   *)
+      event like {!val:inp} (input) or {!val:hup}. See [epoll_ctl(2)] for the events
+      available. Sets can be combined using {!val:(land)} (intersection) and
+      {!val:(lor)} (join) and compared using [(=)].
+  *)
 
   val inp : t
   (** called "in" in Linux; "in" is an OCaml keyword  *)
@@ -88,8 +88,9 @@ val upd : t -> Unix.file_descr -> Events.t -> unit
     documentation but [mod] is already an infix operator in OCaml. *)
 
 val del : t -> Unix.file_descr -> unit
-(** [del epoll fd] unregister [fd] fro [epoll] *)
+(** [del epoll fd] unregister [fd] from [epoll] *)
 
+val wait : t -> int -> int -> (t -> Unix.file_descr -> Events.t -> unit) -> int
 (** [wait epoll max timeout f] waits for events on the fds registered
     with [epoll] to happen or to return after [timeout]. When fds are
     found to be ready, [wait] iterates over them by calling
@@ -102,27 +103,29 @@ val del : t -> Unix.file_descr -> unit
     It is important to address the events that trigger an fd to be
     handled as otherwise the same fd will be handled again at the next
     call to [wait], leading to a tight loop. This is worth checking
-    using strace(1).
+    using [strace(1)].
  
-    See the epoll_wait(2) manual page for the details of the system
+    See the [epoll_wait(2)] manual page for the details of the system
     call.
+
+    @param epoll epoll
+    @param max max fds to handle
+    @param init initial value passed to [f] below
+    @param f callback
+    @returns number of fds ready, 0 = timeout
 *)
-val wait :
-     t (** epoll *)
-  -> int (** max fds to handle *)
-  -> int (** timeout in milliseconds: -1 = wait forever *)
-  -> (t -> Unix.file_descr -> Events.t -> unit)
-  -> int
-(** number of fds ready, 0 = timeout *)
 
 val wait_fold :
-     t (** epoll *)
-  -> int (** max fds to handle *)
-  -> int (** timeout in milliseconds: -1 = wait forever *)
-  -> 'a (* initial value passed to f below *)
-  -> (t -> Unix.file_descr -> Events.t -> 'a -> 'a)
-  -> 'a
+  t -> int -> int -> 'a -> (t -> Unix.file_descr -> Events.t -> 'a -> 'a) -> 'a
 (** [wait_fold epoll max timeout init f] works similar to [wait] except that
     function f additionally receives and produces a value of type ['a]
-    that is threaded through the invocations of [f]]; the final value
-    is returned. *)
+    that is threaded through the invocations of [f]; the final value
+    is returned.
+
+    @param epoll epoll
+    @param max max fds to handle
+    @param timeout timeout in milliseconds: -1 = wait forever
+    @param init initial value passed to [f] below
+    @param f callback
+    @returns number of fds ready, 0 = timeout
+*)
