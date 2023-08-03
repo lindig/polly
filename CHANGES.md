@@ -1,7 +1,7 @@
 ## 0.3.1
 
 - Improve documentation in polly.mli (Török Edwin)
-
+- Use GitHub CI instead of Travis
 
 ## 0.3.0
 
