@@ -1,3 +1,12 @@
+## 0.3.1
+
+- Improve documentation in polly.mli (Török Edwin)
+
+
+## 0.3.0
+
+- Add wait_fold, a folding iterator
+
 ## 0.2.0 (2018-08-16)
 
 - More abstract interface
