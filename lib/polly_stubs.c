@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <sys/resource.h>
 #include <unistd.h>
+#include <sys/eventfd.h>
 #include <caml/mlvalues.h>
 #include <caml/callback.h>
 #include <caml/memory.h>
@@ -156,6 +157,31 @@ caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 	}
 
 	CAMLreturn(args[3]);
+}
+
+CAMLprim value caml_eventfd(value initval, value flags)
+{
+  CAMLparam0();
+  int sock = eventfd(Int_val(initval),Int_val(flags));
+  CAMLreturn(Val_int(sock));
+}
+
+CAMLprim value caml_eventfd_cloexec()
+{
+  CAMLparam0();
+  CAMLreturn(Val_int(EFD_CLOEXEC));
+}
+
+CAMLprim value caml_eventfd_nonblock()
+{
+  CAMLparam0();
+  CAMLreturn(Val_int(EFD_NONBLOCK));
+}
+
+CAMLprim value caml_eventfd_semaphore()
+{
+  CAMLparam0();
+  CAMLreturn(Val_int(EFD_SEMAPHORE));
 }
 
 /* vim: set ts=8 noet: */

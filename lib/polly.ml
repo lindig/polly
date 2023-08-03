@@ -137,3 +137,52 @@ let upd = caml_polly_mod
 let wait = caml_polly_wait
 
 let wait_fold = caml_polly_wait_fold
+
+module EventFD = struct
+  type t = Unix.file_descr
+  type flags = int
+
+  external eventfd  : int -> flags -> t = "caml_eventfd"
+
+  external cloexec  : unit -> int = "caml_eventfd_cloexec"
+  external nonblock  : unit -> int = "caml_eventfd_nonblock"
+  external semaphore  : unit -> int = "caml_eventfd_semaphore"
+
+  let cloexec : flags   = cloexec ()
+  let nonblock : flags  = nonblock ()
+  let semaphore : flags = semaphore ()
+
+  let empty = 0
+
+  let all =
+    [
+      (cloexec, "cloexec")
+    ; (nonblock, "nonblock")
+    ; (semaphore, "semaphore")
+    ]
+
+  let ( lor ) = ( lor )
+
+  let ( land ) = ( land )
+
+  let lnot = lnot
+
+  let to_string t =
+    let add result (event, str) =
+      if t land event <> empty then str :: result else result
+    in
+    List.fold_left add [] all |> String.concat " "
+
+  let test x y = x land y <> empty
+
+  let read : Unix.file_descr -> int64 = fun eventfd ->
+    let buf = Bytes.create 8 in
+    assert (Unix.read eventfd buf 0 8 = 8);
+    Bytes.get_int64_ne buf 0
+
+  let add : Unix.file_descr -> int64 -> unit = fun eventfd n ->
+    let buf = Bytes.create 8 in
+    Bytes.set_int64_ne buf 0 n;
+    assert (Unix.single_write eventfd buf 0 8 = 8)
+
+end
