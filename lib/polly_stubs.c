@@ -166,22 +166,9 @@ CAMLprim value caml_eventfd(value initval, value flags)
   CAMLreturn(Val_int(sock));
 }
 
-CAMLprim value caml_eventfd_cloexec()
-{
-  CAMLparam0();
-  CAMLreturn(Val_int(EFD_CLOEXEC));
-}
+CONSTANT(EFD_CLOEXEC);
+CONSTANT(EFD_NONBLOCK);
+CONSTANT(EFD_SEMAPHORE);
 
-CAMLprim value caml_eventfd_nonblock()
-{
-  CAMLparam0();
-  CAMLreturn(Val_int(EFD_NONBLOCK));
-}
-
-CAMLprim value caml_eventfd_semaphore()
-{
-  CAMLparam0();
-  CAMLreturn(Val_int(EFD_SEMAPHORE));
-}
 
 /* vim: set ts=8 noet: */

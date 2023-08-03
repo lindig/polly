@@ -144,13 +144,13 @@ module EventFD = struct
 
   external eventfd  : int -> flags -> t = "caml_eventfd"
 
-  external cloexec  : unit -> int = "caml_eventfd_cloexec"
-  external nonblock  : unit -> int = "caml_eventfd_nonblock"
-  external semaphore  : unit -> int = "caml_eventfd_semaphore"
+  external efd_cloexec  : unit -> int = "caml_polly_EFD_CLOEXEC"
+  external efd_nonblock  : unit -> int = "caml_polly_EFD_NONBLOCK"
+  external efd_semaphore  : unit -> int = "caml_polly_EFD_SEMAPHORE"
 
-  let cloexec : flags   = cloexec ()
-  let nonblock : flags  = nonblock ()
-  let semaphore : flags = semaphore ()
+  let cloexec : flags   = efd_cloexec ()
+  let nonblock : flags  = efd_nonblock ()
+  let semaphore : flags = efd_semaphore ()
 
   let empty = 0
 
