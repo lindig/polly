@@ -6,7 +6,7 @@
 DUNE 	= dune
 PROFILE = dev
 
-.PHONY: all install test clean format lint release
+.PHONY: all install test clean format lint release test
 
 all:
 	$(DUNE) build --profile=$(PROFILE)
@@ -24,6 +24,9 @@ format:
 lint:
 	opam lint polly.opam
 	opam lint --normalise polly.opam > polly.tmp && mv polly.tmp polly.opam
+
+test:
+	opam exec -- $(DUNE) runtest
 
 release:
 	dune-release tag

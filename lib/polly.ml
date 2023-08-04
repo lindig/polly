@@ -145,11 +145,11 @@ module EventFD = struct
 
   external eventfd : int -> flags -> t = "caml_polly_eventfd"
 
-  external efd_cloexec : unit -> int = "caml_polly_EFD_CLOEXEC"
+  external efd_cloexec : unit -> flags = "caml_polly_EFD_CLOEXEC"
 
-  external efd_nonblock : unit -> int = "caml_polly_EFD_NONBLOCK"
+  external efd_nonblock : unit -> flags = "caml_polly_EFD_NONBLOCK"
 
-  external efd_semaphore : unit -> int = "caml_polly_EFD_SEMAPHORE"
+  external efd_semaphore : unit -> flags = "caml_polly_EFD_SEMAPHORE"
 
   let cloexec : flags = efd_cloexec ()
 
@@ -176,15 +176,19 @@ module EventFD = struct
 
   let test x y = x land y <> empty
 
+  let fail fmt = Printf.kprintf failwith fmt
+
   let read : Unix.file_descr -> int64 =
    fun eventfd ->
     let buf = Bytes.create 8 in
-    assert (Unix.read eventfd buf 0 8 = 8) ;
+    if Unix.read eventfd buf 0 8 <> 8 then
+      fail "%s: Unix.read failed" __FUNCTION__ ;
     Bytes.get_int64_ne buf 0
 
   let add : Unix.file_descr -> int64 -> unit =
    fun eventfd n ->
     let buf = Bytes.create 8 in
     Bytes.set_int64_ne buf 0 n ;
-    assert (Unix.single_write eventfd buf 0 8 = 8)
+    if Unix.single_write eventfd buf 0 8 <> 8 then
+      fail "%s: Unix.single_write failed" __FUNCTION__
 end

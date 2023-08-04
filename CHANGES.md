@@ -1,7 +1,8 @@
-## 0.3.1
+## 0.4.0
 
 - Improve documentation in polly.mli (Török Edwin)
 - Use GitHub CI instead of Travis
+- Add EventFD (Christophe Raffalli)
 
 ## 0.3.0
 

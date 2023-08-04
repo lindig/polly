@@ -131,12 +131,14 @@ val wait_fold :
 *)
 
 module EventFD : sig
+  (** This module provides an interface to the eventfd(2) system call *)
+
   type t = private Unix.file_descr
 
   type flags
 
   (** [eventfd initval flags] create an evenfd with the given initial value
-      and flags. See man evenfd.*)
+      and flags. See man evenfd(2) .*)
 
   val eventfd : int -> flags -> t
 
