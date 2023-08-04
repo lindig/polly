@@ -183,6 +183,7 @@ module EventFD = struct
   let read : Unix.file_descr -> int64 =
    fun eventfd ->
     let buf = Bytes.create 8 in
+    let __FUNCTION__ = "Polly.EventFD.read" in
     if Unix.read eventfd buf 0 8 <> 8 then
       fail "%s: Unix.read failed" __FUNCTION__ ;
     Bytes.get_int64_ne buf 0
@@ -190,6 +191,7 @@ module EventFD = struct
   let add : Unix.file_descr -> int64 -> unit =
    fun eventfd n ->
     let buf = Bytes.create 8 in
+    let __FUNCTION__ = "Polly.EventFD.add" in
     Bytes.set_int64_ne buf 0 n ;
     if Unix.single_write eventfd buf 0 8 <> 8 then
       fail "%s: Unix.single_write failed" __FUNCTION__
