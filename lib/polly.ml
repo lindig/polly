@@ -143,7 +143,7 @@ module EventFD = struct
 
   type flags = int
 
-  external eventfd : int -> flags -> t = "caml_eventfd"
+  external eventfd : int -> flags -> t = "caml_polly_eventfd"
 
   external efd_cloexec : unit -> int = "caml_polly_EFD_CLOEXEC"
 

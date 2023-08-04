@@ -159,7 +159,7 @@ caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 	CAMLreturn(args[3]);
 }
 
-CAMLprim value caml_eventfd(value initval, value flags)
+CAMLprim value caml_polly_eventfd(value initval, value flags)
 {
 	CAMLparam0();
 	int sock = eventfd(Int_val(initval), Int_val(flags));
