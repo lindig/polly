@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/lindig/polly.svg?branch=master)](https://travis-ci.org/lindig/polly)
+[![Build Status](https://github.com/lindig/polly/workflows/CI/badge.svg)]
 
 # Polly
 
@@ -21,6 +21,15 @@ there:
 opam install polly
 ```
 
+# Using inside utop
+
+* `make utop` or
+* `dune utop`
+
+launches a utop toplevel that has the library loaded for interactive
+use.
+
+
 # Other Epoll Bindings
 
 * [OCaml Backpack](https://github.com/jimenezrick/ocaml-backpack/)
@@ -31,7 +40,13 @@ opam install polly
 If you find this useful, please contribute back by raising pull
 requests for improvements you made.
 
-[Travis]: https://www.travis-ci.org/
 [OCaml]:  https://www.ocaml.org/
 [epoll]:  http://man7.org/linux/man-pages/man2/epoll_wait.2.html
 [Opam]:   http://opam.ocaml.org/
+
+# Contributors
+
+* https://github.com/edwintorok/
+* https://github.com/craff/
+
+

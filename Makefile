@@ -3,30 +3,32 @@
 # convenience during development
 #
 
-DUNE 	= dune
 PROFILE = dev
 
-.PHONY: all install test clean format lint release test
+.PHONY: all install test clean format lint release test utop
 
 all:
-	$(DUNE) build --profile=$(PROFILE)
+	dune build --profile=$(PROFILE)
 
 install:
-	$(DUNE) install --profile=$(PROFILE)
+	dune install --profile=$(PROFILE)
 
 clean:
-	$(DUNE) clean
+	dune clean
 
 format:
 	dune build @fmt --auto-promote
 	indent -linux lib/polly_stubs.c
+
+utop:
+	dune utop
 
 lint:
 	opam lint polly.opam
 	opam lint --normalise polly.opam > polly.tmp && mv polly.tmp polly.opam
 
 test:
-	opam exec -- $(DUNE) runtest
+	opam exec -- dune runtest
 
 release:
 	dune-release tag
