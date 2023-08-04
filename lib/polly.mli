@@ -99,12 +99,12 @@ val wait : t -> int -> int -> (t -> Unix.file_descr -> Events.t -> unit) -> int
     over by a call to [wait]. Note that still more than [max] fds could
     be ready to be processed - they would be handled by the next call
     to [wait].
- 
+
     It is important to address the events that trigger an fd to be
     handled as otherwise the same fd will be handled again at the next
     call to [wait], leading to a tight loop. This is worth checking
     using [strace(1)].
- 
+
     See the [epoll_wait(2)] manual page for the details of the system
     call.
 
@@ -129,3 +129,49 @@ val wait_fold :
     @param f callback
     @returns number of fds ready, 0 = timeout
 *)
+
+module EventFD : sig
+
+  type t = private Unix.file_descr
+  type flags
+
+  (** [eventfd initval flags] create an evenfd with the given initial value
+      and flags. See man evenfd.*)
+
+  val eventfd  : int -> flags -> t
+
+  (** close on exec *)
+  val cloexec : flags
+
+  (** non blocking *)
+  val nonblock : flags
+
+  (** semaphore semantics, see man evenfd *)
+  val semaphore : flags
+
+  (** no flags *)
+  val empty : flags
+
+  val test : flags -> flags -> bool
+  (** [test x y] returns true, if and only if the intersection of the
+   * two sets is not empty. The common case is [test set x] where [set]
+   * is unknown and [x] is a singleton to check that [x] is contained in
+   * [set].
+   *)
+
+  val ( lor )  : flags -> flags -> flags
+  val ( land ) : flags -> flags -> flags
+  val lnot     : flags -> flags
+
+  val to_string : flags -> string
+  (** [to_string flags] return a string representation of [flags] for
+      debugging *)
+
+ (** Read the vaue of the eventfd. Block if it is zero (or trigger EAGAIN) and
+     if non zero, reset to 0 is it is not a semaphore otherwise it decrements
+     by 1.  *)
+  val read : t -> int64
+
+  (** Add the given value in the eventfd *)
+  val add : t -> int64 -> unit
+end
