@@ -161,14 +161,13 @@ caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 
 CAMLprim value caml_eventfd(value initval, value flags)
 {
-  CAMLparam0();
-  int sock = eventfd(Int_val(initval),Int_val(flags));
-  CAMLreturn(Val_int(sock));
+	CAMLparam0();
+	int sock = eventfd(Int_val(initval), Int_val(flags));
+	CAMLreturn(Val_int(sock));
 }
 
 CONSTANT(EFD_CLOEXEC);
 CONSTANT(EFD_NONBLOCK);
 CONSTANT(EFD_SEMAPHORE);
-
 
 /* vim: set ts=8 noet: */

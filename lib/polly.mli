@@ -131,26 +131,26 @@ val wait_fold :
 *)
 
 module EventFD : sig
-
   type t = private Unix.file_descr
+
   type flags
 
   (** [eventfd initval flags] create an evenfd with the given initial value
       and flags. See man evenfd.*)
 
-  val eventfd  : int -> flags -> t
+  val eventfd : int -> flags -> t
 
-  (** close on exec *)
   val cloexec : flags
+  (** close on exec *)
 
-  (** non blocking *)
   val nonblock : flags
+  (** non blocking *)
 
-  (** semaphore semantics, see man evenfd *)
   val semaphore : flags
+  (** semaphore semantics, see man evenfd *)
 
-  (** no flags *)
   val empty : flags
+  (** no flags *)
 
   val test : flags -> flags -> bool
   (** [test x y] returns true, if and only if the intersection of the
@@ -159,19 +159,21 @@ module EventFD : sig
    * [set].
    *)
 
-  val ( lor )  : flags -> flags -> flags
+  val ( lor ) : flags -> flags -> flags
+
   val ( land ) : flags -> flags -> flags
-  val lnot     : flags -> flags
+
+  val lnot : flags -> flags
 
   val to_string : flags -> string
   (** [to_string flags] return a string representation of [flags] for
       debugging *)
 
- (** Read the vaue of the eventfd. Block if it is zero (or trigger EAGAIN) and
+  val read : t -> int64
+  (** Read the vaue of the eventfd. Block if it is zero (or trigger EAGAIN) and
      if non zero, reset to 0 is it is not a semaphore otherwise it decrements
      by 1.  *)
-  val read : t -> int64
 
-  (** Add the given value in the eventfd *)
   val add : t -> int64 -> unit
+  (** Add the given value in the eventfd *)
 end
