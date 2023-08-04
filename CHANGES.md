@@ -1,3 +1,7 @@
+## 0.4.1
+
+- Improve compatibility with OCaml CI and more OCaml versions
+
 ## 0.4.0
 
 - Improve documentation in polly.mli (Török Edwin)
