@@ -11,7 +11,7 @@ homepage: "https://github.com/lindig/polly"
 bug-reports: "https://github.com/lindig/polly/issues"
 depends: [
   "dune" {>= "2.0"}
-  "ocaml"
+  "ocaml" {>= "4.08.0"}
   "cmdliner" {>= "1.1.0"}
   "base-unix"
   "conf-linux-libc-dev"
