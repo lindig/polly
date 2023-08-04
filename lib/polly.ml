@@ -178,7 +178,7 @@ module EventFD = struct
 
   let test x y = x land y <> empty
 
-  let fail fmt = Printf.kprintf failwith fmt
+  let fail fmt = Printf.ksprintf failwith fmt
 
   let read : Unix.file_descr -> int64 =
    fun eventfd ->
