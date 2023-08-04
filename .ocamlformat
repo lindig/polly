@@ -1,3 +1,4 @@
+version=0.25.1
 profile=ocamlformat
 indicate-multiline-delimiters=closing-on-separate-line
 if-then-else=fit-or-vertical
