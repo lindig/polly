@@ -12,7 +12,7 @@ Polly is an [OCaml] binding for the Linux [epoll] system call:
 Note that [epoll] is specific to Linux and that this library won't
 compile on macOS, for example.
 
-# Installation
+## Installation
 
 As of version 0.2.2, Polly is now in [Opam] and can be installed from
 there:
@@ -21,7 +21,9 @@ there:
 opam install polly
 ```
 
-# Using inside utop
+Currently version 0.4.1 is under [submission] to Opam.
+
+## Using inside utop
 
 * `make utop` or
 * `dune utop`
@@ -30,12 +32,12 @@ launches a utop toplevel that has the library loaded for interactive
 use.
 
 
-# Other Epoll Bindings
+## Other Epoll Bindings
 
 * [OCaml Backpack](https://github.com/jimenezrick/ocaml-backpack/)
 * [Jane Street Core](https://github.com/janestreet/core)
 
-# Contribute
+## Contribute
 
 If you find this useful, please contribute back by raising pull
 requests for improvements you made.
@@ -43,8 +45,9 @@ requests for improvements you made.
 [OCaml]:  https://www.ocaml.org/
 [epoll]:  http://man7.org/linux/man-pages/man2/epoll_wait.2.html
 [Opam]:   http://opam.ocaml.org/
+[submission]: https://github.com/ocaml/opam-repository/pull/24212
 
-# Contributors
+## Contributors
 
 * https://github.com/edwintorok/
 * https://github.com/craff/
