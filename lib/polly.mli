@@ -137,10 +137,11 @@ module EventFD : sig
 
   type flags
 
-  (** [eventfd initval flags] create an evenfd with the given initial value
-      and flags. See man evenfd(2) .*)
+  val create : int -> flags -> t
+  (** [create initval flags] creates an evenfd with the given initial value
+      and flags. See man evenfd(2).*)
 
-  val eventfd : int -> flags -> t
+  val close : t -> unit
 
   val cloexec : flags
   (** close on exec *)
@@ -149,7 +150,7 @@ module EventFD : sig
   (** non blocking *)
 
   val semaphore : flags
-  (** semaphore semantics, see man evenfd *)
+  (** semaphore semantics, see man eventfd(2) *)
 
   val empty : flags
   (** no flags *)
@@ -173,7 +174,7 @@ module EventFD : sig
 
   val read : t -> int64
   (** Read the vaue of the eventfd. Block if it is zero (or trigger EAGAIN) and
-     if non zero, reset to 0 is it is not a semaphore otherwise it decrements
+     if non zero, reset to 0 if it is not a semaphore otherwise it decrements
      by 1.  *)
 
   val add : t -> int64 -> unit

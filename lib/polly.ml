@@ -143,7 +143,7 @@ module EventFD = struct
 
   type flags = int
 
-  external eventfd : int -> flags -> t = "caml_polly_eventfd"
+  external create : int -> flags -> t = "caml_polly_eventfd"
 
   external efd_cloexec : unit -> flags = "caml_polly_EFD_CLOEXEC"
 
@@ -158,6 +158,8 @@ module EventFD = struct
   let semaphore : flags = efd_semaphore ()
 
   let empty = 0
+
+  let close = Unix.close
 
   let all =
     [(cloexec, "cloexec"); (nonblock, "nonblock"); (semaphore, "semaphore")]
