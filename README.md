@@ -1,5 +1,5 @@
 
-[![Build Status](https://github.com/lindig/polly/workflows/CI/badge.svg)]
+![Build Status](https://github.com/lindig/polly/actions/workflows/workflow.yml/badge.svg)
 
 # Polly
 
