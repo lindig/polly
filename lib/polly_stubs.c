@@ -17,32 +17,6 @@
 #define S2(x) S1(x)
 #define LOCATION __FILE__ ":" S2(__LINE__)
 
-/* Make all constants available to clients by exporting them via a
- * function. This avoids having to hard code them on the client side. 
- * */
-
-#define CONSTANT(name) \
-  CAMLprim value caml_polly_ ## name(value unit) { return Val_int(name); }
-
-CONSTANT(EPOLLIN);
-CONSTANT(EPOLLPRI);
-CONSTANT(EPOLLOUT);
-CONSTANT(EPOLLRDNORM);
-CONSTANT(EPOLLRDBAND);
-CONSTANT(EPOLLWRNORM);
-CONSTANT(EPOLLWRBAND);
-CONSTANT(EPOLLMSG);
-CONSTANT(EPOLLERR);
-CONSTANT(EPOLLHUP);
-CONSTANT(EPOLLRDHUP);
-CONSTANT(EPOLLWAKEUP);
-CONSTANT(EPOLLONESHOT);
-CONSTANT(EPOLLET);
-
-#if 0
-CONSTANT(EPOLLEXCLUSIVE);
-#endif
-
 CAMLprim value caml_polly_create1(value val_unit)
 {
 	CAMLparam1(val_unit);
@@ -165,9 +139,5 @@ CAMLprim value caml_polly_eventfd(value initval, value flags)
 	int sock = eventfd(Int_val(initval), Int_val(flags));
 	CAMLreturn(Val_int(sock));
 }
-
-CONSTANT(EFD_CLOEXEC);
-CONSTANT(EFD_NONBLOCK);
-CONSTANT(EFD_SEMAPHORE);
 
 /* vim: set ts=8 noet: */

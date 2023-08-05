@@ -55,6 +55,8 @@ module Events : sig
 
   val oneshot : t
 
+  val exclusive : t
+
   val et : t
 
   (* val exclusive : t *)

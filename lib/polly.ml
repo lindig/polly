@@ -1,66 +1,42 @@
 module Events = struct
   type t = int
 
-  external polly_IN : unit -> t = "caml_polly_EPOLLIN"
-
-  external polly_PRI : unit -> t = "caml_polly_EPOLLPRI"
-
-  external polly_OUT : unit -> t = "caml_polly_EPOLLOUT"
-
-  external polly_RDNORM : unit -> t = "caml_polly_EPOLLRDNORM"
-
-  external polly_RDBAND : unit -> t = "caml_polly_EPOLLRDBAND"
-
-  external polly_WRNORM : unit -> t = "caml_polly_EPOLLWRNORM"
-
-  external polly_WRBAND : unit -> t = "caml_polly_EPOLLWRBAND"
-
-  external polly_MSG : unit -> t = "caml_polly_EPOLLMSG"
-
-  external polly_ERR : unit -> t = "caml_polly_EPOLLERR"
-
-  external polly_HUP : unit -> t = "caml_polly_EPOLLHUP"
-
-  external polly_RDHUP : unit -> t = "caml_polly_EPOLLRDHUP"
-
-  external polly_WAKEUP : unit -> t = "caml_polly_EPOLLWAKEUP"
-
-  external polly_ONESHOT : unit -> t = "caml_polly_EPOLLONESHOT"
-
-  external polly_ET : unit -> t = "caml_polly_EPOLLET"
-
-  (* external polly_EXCLUSIVE : unit -> t = "caml_polly_EPOLLEXCLUSIVE" *)
-
-  let inp = polly_IN ()
-
-  let pri = polly_PRI ()
-
-  let out = polly_OUT ()
-
-  let rdnorm = polly_RDNORM ()
-
-  let rdband = polly_RDBAND ()
-
-  let wrnorm = polly_WRNORM ()
-
-  let wrband = polly_WRBAND ()
-
-  let msg = polly_MSG ()
-
-  let err = polly_ERR ()
-
-  let hup = polly_HUP ()
-
-  let rdhup = polly_RDHUP ()
-
-  let wakeup = polly_WAKEUP ()
-
-  let oneshot = polly_ONESHOT ()
-
-  let et = polly_ET ()
-
-  (* let exclusive = polly_EXCLUSIVE () *)
-
+  (*
+  #include <sys/epoll.h>
+  enum EPOLL_EVENTS
+  {
+    EPOLLIN = 0x001,
+    EPOLLPRI = 0x002,
+    EPOLLOUT = 0x004,
+    EPOLLRDNORM = 0x040,
+    EPOLLRDBAND = 0x080,
+    EPOLLWRNORM = 0x100,
+    EPOLLWRBAND = 0x200,
+    EPOLLMSG = 0x400,
+    EPOLLERR = 0x008,
+    EPOLLHUP = 0x010,
+    EPOLLRDHUP = 0x2000,
+    EPOLLEXCLUSIVE = 1u << 28,
+    EPOLLWAKEUP = 1u << 29,
+    EPOLLONESHOT = 1u << 30,
+    EPOLLET = 1u << 31
+  };
+  *)
+  let inp = 0x001
+  let pri = 0x002
+  let out = 0x004
+  let rdnorm = 0x040
+  let rdband = 0x080
+  let wrnorm = 0x100
+  let wrband = 0x200
+  let msg = 0x400
+  let err = 0x008
+  let hup = 0x010
+  let rdhup = 0x2000
+  let exclusive = 1 lsl 28
+  let wakeup = 1 lsl 29
+  let oneshot = 1 lsl 30
+  let et = 1 lsl 31
   let empty = 0
 
   let all =
@@ -145,17 +121,13 @@ module EventFD = struct
 
   external create : int -> flags -> t = "caml_polly_eventfd"
 
-  external efd_cloexec : unit -> flags = "caml_polly_EFD_CLOEXEC"
-
-  external efd_nonblock : unit -> flags = "caml_polly_EFD_NONBLOCK"
-
-  external efd_semaphore : unit -> flags = "caml_polly_EFD_SEMAPHORE"
-
-  let cloexec : flags = efd_cloexec ()
-
-  let nonblock : flags = efd_nonblock ()
-
-  let semaphore : flags = efd_semaphore ()
+  (*#include <sys/epoventfd.h>
+  EFD_SEMAPHORE = 00000001,
+  EFD_CLOEXEC = 02000000,
+  EFD_NONBLOCK = 00004000*)
+  let cloexec   : flags = 0o0000001
+  let nonblock  : flags = 0o2000000
+  let semaphore : flags = 0o0004000
 
   let empty = 0
 
