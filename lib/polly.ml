@@ -1,3 +1,7 @@
+let assert_eq x y =
+  if x <> y then (Printf.eprintf "0x%x != 0x%x = 0o%o\n%!" x y y; assert false)
+
+
 module Events = struct
   type t = int
 
@@ -31,35 +35,50 @@ module Events = struct
 
   (* external polly_EXCLUSIVE : unit -> t = "caml_polly_EPOLLEXCLUSIVE" *)
 
-  let inp = polly_IN ()
+  let inp = 0x001
+  let _ = assert_eq inp (polly_IN ())
 
-  let pri = polly_PRI ()
+  let pri = 0x002
+  let _ = assert_eq pri (polly_PRI ())
 
-  let out = polly_OUT ()
+  let out = 0x004
+  let _ = assert_eq out (polly_OUT ())
 
-  let rdnorm = polly_RDNORM ()
+  let rdnorm = 0x040
+  let _ = assert_eq rdnorm (polly_RDNORM ())
 
-  let rdband = polly_RDBAND ()
+  let rdband = 0x080
+  let _ = assert_eq rdband (polly_RDBAND ())
 
-  let wrnorm = polly_WRNORM ()
+  let wrnorm = 0x100
+  let _ = assert_eq wrnorm (polly_WRNORM ())
 
-  let wrband = polly_WRBAND ()
+  let wrband = 0x200
+  let _ = assert_eq wrband (polly_WRBAND ())
 
-  let msg = polly_MSG ()
+  let msg = 0x400
+  let _ = assert_eq msg (polly_MSG ())
 
-  let err = polly_ERR ()
+  let err = 0x008
+  let _ = assert_eq err (polly_ERR ())
 
-  let hup = polly_HUP ()
+  let hup = 0x010
+  let _ = assert_eq hup (polly_HUP ())
 
-  let rdhup = polly_RDHUP ()
+  let rdhup = 0x2000
+  let _ = assert_eq rdhup (polly_RDHUP ())
 
-  let wakeup = polly_WAKEUP ()
+  (* let exclusive = 1 lsl 28
+     let _ = assert_eq exclusive (polly_EXCLUSIVE ()) *)
 
-  let oneshot = polly_ONESHOT ()
+  let wakeup = 1 lsl 29
+  let _ = assert_eq wakeup (polly_WAKEUP ())
 
-  let et = polly_ET ()
+  let oneshot = 1 lsl 30
+  let _ = assert_eq oneshot (polly_ONESHOT ())
 
-  (* let exclusive = polly_EXCLUSIVE () *)
+  let et = 1 lsl 31
+  let _ = assert_eq et (polly_ET ())
 
   let empty = 0
 
@@ -151,11 +170,14 @@ module EventFD = struct
 
   external efd_semaphore : unit -> flags = "caml_polly_EFD_SEMAPHORE"
 
-  let cloexec : flags = efd_cloexec ()
+  let cloexec : flags = 0o2000000
+  let _ = assert_eq cloexec (efd_cloexec ())
 
-  let nonblock : flags = efd_nonblock ()
+  let nonblock : flags = 0o0004000
+  let _ = assert_eq nonblock (efd_nonblock ())
 
-  let semaphore : flags = efd_semaphore ()
+  let semaphore : flags = 0o0000001
+  let _ = assert_eq semaphore (efd_semaphore ())
 
   let empty = 0
 
