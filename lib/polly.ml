@@ -103,24 +103,24 @@ external caml_polly_add :
    -> (int[@untagged])
    -> (Events.t[@untagged])
    -> (int[@untagged])
-  [@noalloc])
-  = "caml_polly_add" "caml_untagged_polly_add"
+  [@noalloc]
+  ) = "caml_polly_add" "caml_untagged_polly_add"
 
 external caml_polly_del :
   (   (t[@untagged])
    -> (int[@untagged])
    -> (Events.t[@untagged])
    -> (int[@untagged])
-  [@noalloc])
-  = "caml_polly_del" "caml_untagged_polly_del"
+  [@noalloc]
+  ) = "caml_polly_del" "caml_untagged_polly_del"
 
 external caml_polly_mod :
   (   (t[@untagged])
    -> (int[@untagged])
    -> (Events.t[@untagged])
    -> (int[@untagged])
-  [@noalloc])
-  = "caml_polly_mod" "caml_untagged_polly_mod"
+  [@noalloc]
+  ) = "caml_polly_mod" "caml_untagged_polly_mod"
 
 external caml_polly_create1 : unit -> t = "caml_polly_create1"
 
