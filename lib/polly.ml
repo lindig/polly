@@ -146,7 +146,7 @@ let upd : t -> Unix.file_descr -> Events.t -> unit =
  fun t fd evt ->
   let __FUNCTION__ = "Polly.upd" in
   let r = caml_polly_mod t (Obj.magic fd) evt in
-   if r = -1 then uerror __FUNCTION__
+  if r = -1 then uerror __FUNCTION__
 
 let wait = caml_polly_wait
 
