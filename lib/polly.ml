@@ -130,20 +130,23 @@ let close t = Unix.close (Obj.magic t : Unix.file_descr)
 
 external uerror : string -> 'a = "caml_raise_unix_error"
 
-let add : t -> Unix.file_descr -> Events.t -> unit = fun t fd evt ->
-  let __FUNCTION__ = "Polly.add" in
-  let r = caml_polly_add t (Obj.magic fd) evt in
-  if r = -1 then uerror __FUNCTION__
+let add : t -> Unix.file_descr -> Events.t -> unit =
+  fun t fd evt ->
+    let __FUNCTION__ = "Polly.add" in
+    let r = caml_polly_add t (Obj.magic fd) evt in
+    if r = -1 then uerror __FUNCTION__
 
-let del : t -> Unix.file_descr -> unit = fun t fd ->
-  let __FUNCTION__ = "Polly.del" in
-  let r = caml_polly_del t (Obj.magic fd) Events.empty in
-  if r = -1 then uerror __FUNCTION__
+let del : t -> Unix.file_descr -> unit =
+  fun t fd ->
+    let __FUNCTION__ = "Polly.del" in
+    let r = caml_polly_del t (Obj.magic fd) Events.empty in
+    if r = -1 then uerror __FUNCTION__
 
-let upd : t -> Unix.file_descr -> Events.t -> unit = fun t fd evt ->
-  let __FUNCTION__ = "Polly.upd" in
-  let r = caml_polly_mod t (Obj.magic fd) evt in
-  if r = -1 then uerror __FUNCTION__
+let upd : t -> Unix.file_descr -> Events.t -> unit =
+  fun t fd evt ->
+    let __FUNCTION__ = "Polly.upd" in
+    let r = caml_polly_mod t (Obj.magic fd) evt in
+    if r = -1 then uerror __FUNCTION__
 
 let wait = caml_polly_wait
 
