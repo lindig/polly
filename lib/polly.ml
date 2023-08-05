@@ -125,9 +125,10 @@ module EventFD = struct
     EFD_SEMAPHORE = 00000001,
     EFD_CLOEXEC = 02000000,
     EFD_NONBLOCK = 00004000*)
-  let cloexec   : flags = 0o0000001
 
-  let nonblock  : flags = 0o2000000
+  let cloexec : flags = 0o0000001
+
+  let nonblock : flags = 0o2000000
 
   let semaphore : flags = 0o0004000
 
