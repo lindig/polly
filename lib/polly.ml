@@ -96,16 +96,16 @@ module Events = struct
   let test x y = x land y <> empty
 end
 
-type t = Unix.file_descr (* epoll fd *)
+type t = int (* epoll fd *)
 
-external caml_polly_add : t -> Unix.file_descr -> Events.t -> unit
-  = "caml_polly_add"
+external caml_polly_add : (t [@untagged]) -> (int [@untagged]) -> (Events.t [@untagged]) -> (int [@untagged]) [@noalloc]
+  = "caml_polly_add" "caml_untagged_polly_add"
 
-external caml_polly_del : t -> Unix.file_descr -> Events.t -> unit
-  = "caml_polly_del"
+external caml_polly_del : (t [@untagged]) -> (int [@untagged]) -> (Events.t [@untagged]) -> (int [@untagged]) [@noalloc]
+  = "caml_polly_del" "caml_untagged_polly_del"
 
-external caml_polly_mod : t -> Unix.file_descr -> Events.t -> unit
-  = "caml_polly_mod"
+external caml_polly_mod : (t [@untagged]) -> (int [@untagged]) -> (Events.t [@untagged]) -> (int [@untagged]) [@noalloc]
+  = "caml_polly_mod" "caml_untagged_polly_mod"
 
 external caml_polly_create1 : unit -> t = "caml_polly_create1"
 
@@ -113,7 +113,7 @@ external caml_polly_wait :
      t (* epoll fd *)
   -> int (* max number of fds handled *)
   -> int (* timeout in ms *)
-  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
+  -> (t -> Unix.file_descr -> Events.t -> unit)
   -> int (* actual number of ready fds; 0 = timeout *) = "caml_polly_wait"
 
 external caml_polly_wait_fold :
@@ -121,18 +121,29 @@ external caml_polly_wait_fold :
   -> int (* max number of fds handled *)
   -> int (* timeout in ms *)
   -> 'a (* initial value *)
-  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> 'a -> 'a)
+  -> (t -> Unix.file_descr -> Events.t -> 'a -> 'a)
   -> 'a (* final value *) = "caml_polly_wait_fold"
 
 let create = caml_polly_create1
 
-let close t = Unix.close t
+let close t = Unix.close (Obj.magic t : Unix.file_descr)
 
-let add = caml_polly_add
+external uerror : string -> 'a -> 'b = "caml_uerror"
 
-let del t fd = caml_polly_del t fd Events.empty
+let add : t -> Unix.file_descr -> Events.t -> unit = fun t fd evt ->
+  let __FUNCTION__ = "Polly.add" in
+  let r = caml_polly_add t (Obj.magic fd) evt in
+  if r = -1 then uerror __FUNCTION__ None
 
-let upd = caml_polly_mod
+let del : t -> Unix.file_descr -> unit = fun t fd ->
+  let __FUNCTION__ = "Polly.del" in
+  let r = caml_polly_del t (Obj.magic fd) Events.empty in
+  if r = -1 then uerror __FUNCTION__ None
+
+let upd : t -> Unix.file_descr -> Events.t -> unit = fun t fd evt ->
+  let __FUNCTION__ = "Polly.upd" in
+  let r = caml_polly_mod t (Obj.magic fd) evt in
+  if r = -1 then uerror __FUNCTION__ None
 
 let wait = caml_polly_wait
 

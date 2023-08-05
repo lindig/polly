@@ -60,16 +60,13 @@ CAMLprim value caml_polly_create1(value val_unit)
 static value
 caml_polly_ctl(value val_epfd, value val_fd, value val_events, int op)
 {
-	CAMLparam3(val_epfd, val_fd, val_events);
-	struct epoll_event event = {
-		.events = (uint32_t) Int_val(val_events),
-		.data.fd = Int_val(val_fd)
-	};
+  CAMLparam0(); /* no need to register int */
+  struct epoll_event event = {
+    .events = (uint32_t) Int_val(val_events),
+    .data.fd = Int_val(val_fd)
+  };
 
-	if (epoll_ctl(Int_val(val_epfd), op, Int_val(val_fd), &event) == -1)
-		uerror(__FUNCTION__, Nothing);
-
-	CAMLreturn(Val_unit);
+  CAMLreturn(Val_int(epoll_ctl(Int_val(val_epfd), op, Int_val(val_fd), &event)));
 }
 
 CAMLprim value caml_polly_add(value val_epfd, value val_fd, value val_events)
@@ -77,14 +74,38 @@ CAMLprim value caml_polly_add(value val_epfd, value val_fd, value val_events)
 	return caml_polly_ctl(val_epfd, val_fd, val_events, EPOLL_CTL_ADD);
 }
 
+int caml_untagged_polly_add(int epfd, int fd, int events) {
+  struct epoll_event event = {
+    .events = (uint32_t) events,
+    .data.fd = fd
+  };
+  return epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &event);
+}
+
 CAMLprim value caml_polly_mod(value val_epfd, value val_fd, value val_events)
 {
 	return caml_polly_ctl(val_epfd, val_fd, val_events, EPOLL_CTL_MOD);
 }
 
+int caml_untagged_polly_mod(int epfd, int fd, int events) {
+  struct epoll_event event = {
+    .events = (uint32_t) events,
+    .data.fd = fd
+  };
+  return epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &event);
+}
+
 CAMLprim value caml_polly_del(value val_epfd, value val_fd, value val_events)
 {
 	return caml_polly_ctl(val_epfd, val_fd, val_events, EPOLL_CTL_DEL);
+}
+
+int caml_untagged_polly_del(int epfd, int fd, int events) {
+  struct epoll_event event = {
+    .events = (uint32_t) events,
+    .data.fd = fd
+  };
+  return epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &event);
 }
 
 CAMLprim value
