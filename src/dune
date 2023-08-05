@@ -2,3 +2,9 @@
  (name main)
  (public_name "polly-test")
  (libraries cmdliner polly))
+
+(rule
+ (targets constants.exe)
+ (deps constants.c)
+ (action
+  (run gcc -o %{targets} %{deps})))
