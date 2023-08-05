@@ -43,6 +43,13 @@ CONSTANT(EPOLLET);
 CONSTANT(EPOLLEXCLUSIVE);
 #endif
 
+/* necessary because of changes from 4.X to 5.X in ocaml,
+   uerror is a macro in 5.0 */
+CAMLprim void caml_raise_unix_error(value funname) {
+  CAMLparam1(funname);
+  uerror(String_val(funname),Nothing);
+}
+
 CAMLprim value caml_polly_create1(value val_unit)
 {
 	CAMLparam1(val_unit);
