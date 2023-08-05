@@ -22,21 +22,37 @@ module Events = struct
     EPOLLET = 1u << 31
   };
   *)
+
   let inp = 0x001
+
   let pri = 0x002
+
   let out = 0x004
+
   let rdnorm = 0x040
+
   let rdband = 0x080
+
   let wrnorm = 0x100
+
   let wrband = 0x200
+
   let msg = 0x400
+
   let err = 0x008
+
   let hup = 0x010
+
   let rdhup = 0x2000
+
   let exclusive = 1 lsl 28
+
   let wakeup = 1 lsl 29
+
   let oneshot = 1 lsl 30
+
   let et = 1 lsl 31
+
   let empty = 0
 
   let all =
