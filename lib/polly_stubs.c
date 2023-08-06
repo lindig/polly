@@ -35,19 +35,25 @@ CAMLprim value caml_polly_create1(value val_unit)
 	CAMLreturn(val_res);
 }
 
+/* necessary because of changes from 4.X to 5.X in ocaml,
+   uerror is a macro in 5.0 */
+CAMLprim void caml_raise_unix_error(value funname) {
+  CAMLparam1(funname);
+  uerror(String_val(funname),Nothing);
+}
+
+
 static value
 caml_polly_ctl(value val_epfd, value val_fd, value val_events, int op)
 {
-	CAMLparam3(val_epfd, val_fd, val_events);
-	struct epoll_event event = {
-		.events = (uint32_t) Int_val(val_events),
-		.data.fd = Int_val(val_fd)
-	};
+  CAMLparam3(val_epfd, val_fd, val_events);
+  struct epoll_event event = {
+    .events = (uint32_t) Int_val(val_events),
+    .data.fd = Int_val(val_fd)
+  };
 
-	if (epoll_ctl(Int_val(val_epfd), op, Int_val(val_fd), &event) == -1)
-		uerror(__FUNCTION__, Nothing);
 
-	CAMLreturn(Val_unit);
+  CAMLreturn(Val_int(epoll_ctl(Int_val(val_epfd), op, Int_val(val_fd), &event)));
 }
 
 CAMLprim value caml_polly_add(value val_epfd, value val_fd, value val_events)
