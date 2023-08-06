@@ -1,7 +1,7 @@
 module Events = struct
   type t = int
 
-  include Constants.Epoll_constants
+  include Constants.Epoll
 
   let empty = 0
 
@@ -87,7 +87,7 @@ module EventFD = struct
 
   external create : int -> flags -> t = "caml_polly_eventfd"
 
-  include Constants.EventFd_constants
+  include Constants.EventFD
 
   let empty = 0
 

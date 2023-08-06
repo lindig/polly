@@ -8,7 +8,7 @@ void constant(const char* name, int value) {
 }
 
 int main(int argc, char **argv) {
-  printf("module Epoll_constants = struct\n");
+  printf("module Epoll = struct\n");
 
   constant("inp",EPOLLIN);
   constant("pri",EPOLLPRI);
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 
   printf("end\n");
 
-  printf("module EventFd_constants = struct\n");
+  printf("module EventFD = struct\n");
 
   constant("cloexec", EFD_CLOEXEC);
   constant("nonblock", EFD_NONBLOCK);
@@ -36,5 +36,5 @@ int main(int argc, char **argv) {
 
   printf("end\n");
 
-  fflush(stdout);
+  return 0;
 }
