@@ -23,7 +23,7 @@ format:
 utop:
 	dune utop
 
-lint:
+lint: 	format
 	opam lint polly.opam
 	opam lint --normalise polly.opam > polly.tmp && mv polly.tmp polly.opam
 
