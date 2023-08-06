@@ -40,6 +40,14 @@ end
 
 type t = Unix.file_descr (* epoll fd *)
 
+module EventBuffer = struct
+  type t = int * Bytes.t
+
+  let create n =
+    if n <= 1 then invalid_arg "EventBuffer.make" ;
+    (n, Bytes.create (n * Constants.epoll_event_size))
+end
+
 external caml_polly_add : t -> Unix.file_descr -> Events.t -> unit
   = "caml_polly_add"
 
@@ -51,21 +59,6 @@ external caml_polly_mod : t -> Unix.file_descr -> Events.t -> unit
 
 external caml_polly_create1 : unit -> t = "caml_polly_create1"
 
-external caml_polly_wait :
-     t (* epoll fd *)
-  -> int (* max number of fds handled *)
-  -> int (* timeout in ms *)
-  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
-  -> int (* actual number of ready fds; 0 = timeout *) = "caml_polly_wait"
-
-external caml_polly_wait_fold :
-     t (* epoll fd *)
-  -> int (* max number of fds handled *)
-  -> int (* timeout in ms *)
-  -> 'a (* initial value *)
-  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> 'a -> 'a)
-  -> 'a (* final value *) = "caml_polly_wait_fold"
-
 let create = caml_polly_create1
 
 let close t = Unix.close t
@@ -76,9 +69,35 @@ let del t fd = caml_polly_del t fd Events.empty
 
 let upd = caml_polly_mod
 
-let wait = caml_polly_wait
+external wait :
+     t (* epoll fd *)
+  -> int (* max number of fds handled *)
+  -> int (* timeout in ms *)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
+  -> int (* actual number of ready fds; 0 = timeout *) = "caml_polly_wait"
 
-let wait_fold = caml_polly_wait_fold
+external wait_buffer :
+     t (* epoll fd *)
+  -> EventBuffer.t (* buffer to hold events *)
+  -> int (* timeout in ms *)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> unit)
+  -> int (* actual number of ready fds; 0 = timeout *) = "caml_polly_wait_buf"
+
+external wait_fold :
+     t (* epoll fd *)
+  -> int (* max number of fds handled *)
+  -> int (* timeout in ms *)
+  -> 'a (* initial value *)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> 'a -> 'a)
+  -> 'a (* final value *) = "caml_polly_wait_fold"
+
+external wait_buffer_fold :
+     t (* epoll fd *)
+  -> EventBuffer.t (* buffer to hold events *)
+  -> int (* timeout in ms *)
+  -> 'a (* initial value *)
+  -> (Unix.file_descr -> Unix.file_descr -> Events.t -> 'a -> 'a)
+  -> 'a (* final value *) = "caml_polly_wait_buf_fold"
 
 module EventFD = struct
   type t = Unix.file_descr

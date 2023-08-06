@@ -79,6 +79,13 @@ module Events : sig
   (** [to_string t] return a string representation of [t] for debugging *)
 end
 
+module EventBuffer : sig
+  type t
+
+  val create : int -> t
+  (** create a buffer to hold events ready for opearations *)
+end
+
 val add : t -> Unix.file_descr -> Events.t -> unit
 (** [add epoll fd events] registers [fd] with [epoll] to monitor for [events] *)
 
@@ -115,6 +122,11 @@ val wait : t -> int -> int -> (t -> Unix.file_descr -> Events.t -> unit) -> int
     @returns number of fds ready, 0 = timeout
 *)
 
+val wait_buffer :
+  t -> EventBuffer.t -> int -> (t -> Unix.file_descr -> Events.t -> unit) -> int
+(** [wait_buf epoll buf timeout f] same as [wait epoll max timeout f], but takes a
+   buffer preallocated buffer created with [EventBuffer.make max]. *)
+
 val wait_fold :
   t -> int -> int -> 'a -> (t -> Unix.file_descr -> Events.t -> 'a -> 'a) -> 'a
 (** [wait_fold epoll max timeout init f] works similar to [wait] except that
@@ -129,6 +141,15 @@ val wait_fold :
     @param f callback
     @returns number of fds ready, 0 = timeout
 *)
+
+val wait_buffer_fold :
+     t
+  -> EventBuffer.t
+  -> int
+  -> 'a
+  -> (t -> Unix.file_descr -> Events.t -> 'a -> 'a)
+  -> 'a
+(** same as [wait_buffer], but for [wait_fold]*)
 
 module EventFD : sig
   (** This module provides an interface to the eventfd(2) system call *)

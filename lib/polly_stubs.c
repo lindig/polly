@@ -99,6 +99,36 @@ caml_polly_wait(value val_epfd, value val_max, value val_timeout, value val_f)
 }
 
 CAMLprim value
+caml_polly_wait_buf(value val_epfd, value val_buf, value val_timeout, value val_f)
+{
+        CAMLparam2(val_buf, val_f);
+	CAMLlocal1(ignore);
+
+	int val_max = Int_val(Field(val_buf,0));
+
+	struct epoll_event *events =
+	  (struct epoll_event*) String_val(Field(val_buf,1));
+	int ready, i;
+
+	caml_enter_blocking_section();
+	ready = epoll_wait(Int_val(val_epfd), events, Int_val(val_max),
+			   Int_val(val_timeout));
+	caml_leave_blocking_section();
+
+	if (ready == -1)
+		uerror(__FUNCTION__, Nothing);
+
+	for (i = 0; i < ready; i++) {
+		ignore = caml_callback3(val_f,
+					val_epfd,
+					Val_int(events[i].data.fd),
+					Val_int(events[i].events));
+	}
+
+	CAMLreturn(Val_int(ready));
+}
+
+CAMLprim value
 caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 		     value val_init, value val_f)
 {
@@ -125,6 +155,45 @@ caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 
 	if (ready == -1)
 		uerror(__FUNCTION__, Nothing);
+
+	args[0] = val_epfd;
+	args[3] = val_init;
+	for (i = 0; i < ready; i++) {
+		args[1] = Val_int(events[i].data.fd);
+		args[2] = Val_int(events[i].events);
+		args[3] = caml_callbackN(val_f, 4, args);
+	}
+
+	CAMLreturn(args[3]);
+}
+
+CAMLprim value
+caml_polly_wait_buf_fold(value val_epfd, value val_buf, value val_timeout, value val_init, value val_f)
+{
+        CAMLparam3(val_buf, val_init, val_f);
+	CAMLlocal1(ignore);
+	value args[4];		/* must not be CAMLlocalN */
+
+	int val_max = Int_val(Field(val_buf, 0));
+
+	struct epoll_event *events =
+	  (struct epoll_event*) String_val(Field(val_buf, 1));
+	int ready, i;
+
+	caml_enter_blocking_section();
+	ready = epoll_wait(Int_val(val_epfd), events, Int_val(val_max),
+			   Int_val(val_timeout));
+	caml_leave_blocking_section();
+
+	if (ready == -1)
+		uerror(__FUNCTION__, Nothing);
+
+	for (i = 0; i < ready; i++) {
+		ignore = caml_callback3(val_f,
+					val_epfd,
+					Val_int(events[i].data.fd),
+					Val_int(events[i].events));
+	}
 
 	args[0] = val_epfd;
 	args[3] = val_init;

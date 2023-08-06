@@ -28,6 +28,8 @@ int main(int argc, char **argv) {
 
   printf("end\n");
 
+  printf("let epoll_event_size = %d\n", sizeof(sizeof(struct epoll_event)));
+
   printf("module EventFD = struct\n");
 
   constant("cloexec", EFD_CLOEXEC);
