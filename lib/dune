@@ -5,3 +5,12 @@
  (foreign_stubs
   (language c)
   (names polly_stubs)))
+
+(rule
+ (targets constants.ml)
+ (deps
+  (:bin ../src/constants.exe))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{bin}))))

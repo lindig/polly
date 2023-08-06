@@ -1,65 +1,7 @@
 module Events = struct
   type t = int
 
-  external polly_IN : unit -> t = "caml_polly_EPOLLIN"
-
-  external polly_PRI : unit -> t = "caml_polly_EPOLLPRI"
-
-  external polly_OUT : unit -> t = "caml_polly_EPOLLOUT"
-
-  external polly_RDNORM : unit -> t = "caml_polly_EPOLLRDNORM"
-
-  external polly_RDBAND : unit -> t = "caml_polly_EPOLLRDBAND"
-
-  external polly_WRNORM : unit -> t = "caml_polly_EPOLLWRNORM"
-
-  external polly_WRBAND : unit -> t = "caml_polly_EPOLLWRBAND"
-
-  external polly_MSG : unit -> t = "caml_polly_EPOLLMSG"
-
-  external polly_ERR : unit -> t = "caml_polly_EPOLLERR"
-
-  external polly_HUP : unit -> t = "caml_polly_EPOLLHUP"
-
-  external polly_RDHUP : unit -> t = "caml_polly_EPOLLRDHUP"
-
-  external polly_WAKEUP : unit -> t = "caml_polly_EPOLLWAKEUP"
-
-  external polly_ONESHOT : unit -> t = "caml_polly_EPOLLONESHOT"
-
-  external polly_ET : unit -> t = "caml_polly_EPOLLET"
-
-  (* external polly_EXCLUSIVE : unit -> t = "caml_polly_EPOLLEXCLUSIVE" *)
-
-  let inp = polly_IN ()
-
-  let pri = polly_PRI ()
-
-  let out = polly_OUT ()
-
-  let rdnorm = polly_RDNORM ()
-
-  let rdband = polly_RDBAND ()
-
-  let wrnorm = polly_WRNORM ()
-
-  let wrband = polly_WRBAND ()
-
-  let msg = polly_MSG ()
-
-  let err = polly_ERR ()
-
-  let hup = polly_HUP ()
-
-  let rdhup = polly_RDHUP ()
-
-  let wakeup = polly_WAKEUP ()
-
-  let oneshot = polly_ONESHOT ()
-
-  let et = polly_ET ()
-
-  (* let exclusive = polly_EXCLUSIVE () *)
+  include Constants.Epoll
 
   let empty = 0
 
@@ -145,17 +87,7 @@ module EventFD = struct
 
   external create : int -> flags -> t = "caml_polly_eventfd"
 
-  external efd_cloexec : unit -> flags = "caml_polly_EFD_CLOEXEC"
-
-  external efd_nonblock : unit -> flags = "caml_polly_EFD_NONBLOCK"
-
-  external efd_semaphore : unit -> flags = "caml_polly_EFD_SEMAPHORE"
-
-  let cloexec : flags = efd_cloexec ()
-
-  let nonblock : flags = efd_nonblock ()
-
-  let semaphore : flags = efd_semaphore ()
+  include Constants.EventFD
 
   let empty = 0
 
