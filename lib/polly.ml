@@ -77,15 +77,15 @@ let close t = Unix.close t
 
 let add t fd e =
   let r = caml_polly_add t fd e in
-  if r = -1 then caml_raise_unix_error "Polly.caml_polly_add"
+  if r = -1 then caml_raise_unix_error "Polly.add"
 
 let del t fd =
   let r = caml_polly_del t fd Events.empty in
-  if r = -1 then caml_raise_unix_error "Polly.caml_polly_del"
+  if r = -1 then caml_raise_unix_error "Polly.del"
 
 let upd t fd e =
   let r = caml_polly_mod t fd e in
-  if r = -1 then caml_raise_unix_error "Polly.caml_polly_mod"
+  if r = -1 then caml_raise_unix_error "Polly.mod"
 
 let wait = caml_polly_wait
 
