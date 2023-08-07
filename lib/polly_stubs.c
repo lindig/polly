@@ -35,8 +35,8 @@ CAMLprim value caml_polly_create1(value val_unit)
 	CAMLreturn(val_res);
 }
 
-/* necessary because of changes from 4.X to 5.X in ocaml,
-   uerror is a macro in 5.0 */
+/* beware, uerror is a macro in 5.0 and a function in 4.X, the new function
+   name is caml_uerror. uerror might be deprecated in the future. */
 CAMLprim void caml_raise_unix_error(value funname) {
   CAMLparam1(funname);
   uerror(String_val(funname),Nothing);
