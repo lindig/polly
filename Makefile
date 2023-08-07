@@ -19,6 +19,7 @@ clean:
 format:
 	dune build @fmt --auto-promote
 	indent -linux lib/polly_stubs.c
+	indent -linux src/constants.c
 
 utop:
 	dune utop

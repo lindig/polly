@@ -144,6 +144,4 @@ CAMLprim value caml_polly_eventfd(value initval, value flags)
 	CAMLreturn(Val_int(sock));
 }
 
-
-
 /* vim: set ts=8 noet: */
