@@ -42,14 +42,17 @@ type t = Unix.file_descr (* epoll fd *)
 
 external caml_raise_unix_error : string -> 'a = "caml_raise_unix_error"
 
-external caml_polly_add : t -> Unix.file_descr -> Events.t -> int =
-  "caml_polly_add" [@@noalloc]
+external caml_polly_add : t -> Unix.file_descr -> Events.t -> int
+  = "caml_polly_add"
+[@@noalloc]
 
 external caml_polly_del : t -> Unix.file_descr -> Events.t -> int
-  = "caml_polly_del" [@@noalloc]
+  = "caml_polly_del"
+[@@noalloc]
 
 external caml_polly_mod : t -> Unix.file_descr -> Events.t -> int
-  = "caml_polly_mod" [@@noalloc]
+  = "caml_polly_mod"
+[@@noalloc]
 
 external caml_polly_create1 : unit -> t = "caml_polly_create1"
 
