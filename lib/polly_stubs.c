@@ -141,6 +141,8 @@ CAMLprim value caml_polly_eventfd(value initval, value flags)
 {
 	CAMLparam0();
 	int sock = eventfd(Int_val(initval), Int_val(flags));
+	if (-1 == sock)
+		uerror(__FUNCTION__, Nothing);
 	CAMLreturn(Val_int(sock));
 }
 
