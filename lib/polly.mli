@@ -157,9 +157,9 @@ module EventFD : sig
 
   val test : flags -> flags -> bool
   (** [test x y] returns true, if and only if the intersection of the
-   * two sets is not empty. The common case is [test set x] where [set]
-   * is unknown and [x] is a singleton to check that [x] is contained in
-   * [set].
+     two sets is not empty. The common case is [test set x] where [set]
+     is unknown and [x] is a singleton to check that [x] is contained in
+     [set].
    *)
 
   val ( lor ) : flags -> flags -> flags
