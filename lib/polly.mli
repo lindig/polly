@@ -110,7 +110,7 @@ val wait : t -> int -> int -> (t -> Unix.file_descr -> Events.t -> unit) -> int
 
     @param epoll epoll
     @param max max fds to handle
-    @param init initial value passed to [f] below
+    @param timeout timeout in milliseconds: -1 = wait forever
     @param f callback
     @returns number of fds ready, 0 = timeout
 *)
