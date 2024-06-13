@@ -40,14 +40,19 @@ end
 
 type t = Unix.file_descr (* epoll fd *)
 
-external caml_polly_add : t -> Unix.file_descr -> Events.t -> unit
+external caml_raise_unix_error : string -> 'a = "caml_raise_unix_error"
+
+external caml_polly_add : t -> Unix.file_descr -> Events.t -> int
   = "caml_polly_add"
+[@@noalloc]
 
-external caml_polly_del : t -> Unix.file_descr -> Events.t -> unit
+external caml_polly_del : t -> Unix.file_descr -> Events.t -> int
   = "caml_polly_del"
+[@@noalloc]
 
-external caml_polly_mod : t -> Unix.file_descr -> Events.t -> unit
+external caml_polly_mod : t -> Unix.file_descr -> Events.t -> int
   = "caml_polly_mod"
+[@@noalloc]
 
 external caml_polly_create1 : unit -> t = "caml_polly_create1"
 
@@ -70,11 +75,17 @@ let create = caml_polly_create1
 
 let close t = Unix.close t
 
-let add = caml_polly_add
+let add t fd e =
+  let r = caml_polly_add t fd e in
+  if r < 0 then caml_raise_unix_error "Polly.add"
 
-let del t fd = caml_polly_del t fd Events.empty
+let del t fd =
+  let r = caml_polly_del t fd Events.empty in
+  if r < 0 then caml_raise_unix_error "Polly.del"
 
-let upd = caml_polly_mod
+let upd t fd e =
+  let r = caml_polly_mod t fd e in
+  if r < 0 then caml_raise_unix_error "Polly.mod"
 
 let wait = caml_polly_wait
 
