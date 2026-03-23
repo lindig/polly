@@ -1,3 +1,7 @@
+## 0.5.0
+ - Improve the C bindings for compatibility with OCaml 5
+ - release the OCaml runtime lock around C functions
+
 ## 0.4.1
 
 - Improve compatibility with OCaml CI and more OCaml versions
@@ -21,5 +25,3 @@
 ## 0.1.0 (2018-12-17)
 
 - Initial release
-
-
