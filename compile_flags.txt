@@ -1,0 +1,4 @@
+# This is used by clangd LSP to help it
+# find the OCaml header files. Unfortunately
+# these paths are not portable
+-I/home/lindig/.opam/next/lib/ocaml
