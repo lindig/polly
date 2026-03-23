@@ -31,10 +31,9 @@ lint: 	format
 test:
 	opam exec -- dune runtest
 
-release:
-	dune-release tag
-	dune-release distrib
-	dune-release opam pkg
-	echo 'use "dune-release opam submit" to release on Opam'
+opam:   all
+	cp polly.opam opam
+	./url.sh $$(git describe --tags --abbrev=0) >> opam
+
 
 # vim:ts=8:noet:

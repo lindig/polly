@@ -1,0 +1,14 @@
+#! /bin/bash
+set -e
+V=${1:-0.5.0}
+url="https://github.com/lindig/polly/archive/$V.zip"
+test -f $V.zip || wget "$url"
+cat <<EOF
+url {
+  src: "$url"
+  checksum: [
+    "sha256=$(sha256sum $V.zip | awk '{print $1}')"
+    "md5=$(md5sum $V.zip | awk '{print $1}')"
+  ]
+}
+EOF

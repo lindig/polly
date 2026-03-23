@@ -4,3 +4,4 @@ _build/
 lib/polly_stubs.c~
 src/constants.c~
 .zed/tasks.json
+opam
