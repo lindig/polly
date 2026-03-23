@@ -26,7 +26,9 @@ let process sock epoll fd events count =
     accept epoll sock ; count
   ) else (
     ( if Polly.Events.(test events ready) then
-        match Unix.read fd buf 0 20 with
+        match
+          Unix.read fd buf 0 20
+        with
         | 0 ->
             Unix.close fd
         | n ->

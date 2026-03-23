@@ -64,7 +64,8 @@ external caml_polly_wait_fold :
   -> int (* timeout in ms *)
   -> 'a (* initial value *)
   -> (Unix.file_descr -> Unix.file_descr -> Events.t -> 'a -> 'a)
-  -> 'a (* final value *) = "caml_polly_wait_fold"
+  -> 'a
+  (* final value *) = "caml_polly_wait_fold"
 
 let create = caml_polly_create1
 

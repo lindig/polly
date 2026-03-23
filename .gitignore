@@ -1,3 +1,6 @@
 _build/
 .merlin
 *.install
+lib/polly_stubs.c~
+src/constants.c~
+.zed/tasks.json

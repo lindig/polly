@@ -1,7 +1,6 @@
 
 #include <sys/epoll.h>
 #include <alloca.h>
-#include <errno.h>
 #include <sys/resource.h>
 #include <unistd.h>
 #include <sys/eventfd.h>
@@ -12,14 +11,7 @@
 #include <caml/alloc.h>
 #include <caml/signals.h>
 #include <caml/unixsupport.h>
-
-#define S1(x) #x
-#define S2(x) S1(x)
-#define LOCATION __FILE__ ":" S2(__LINE__)
-
-/* Make all constants available to clients by exporting them via a
- * function. This avoids having to hard code them on the client side.
- * */
+#include <caml/threads.h>
 
 CAMLprim value caml_polly_create1(value val_unit)
 {
@@ -31,7 +23,6 @@ CAMLprim value caml_polly_create1(value val_unit)
 		uerror(__FUNCTION__, Nothing);
 
 	val_res = Val_int(fd);
-
 	CAMLreturn(val_res);
 }
 
@@ -44,7 +35,15 @@ caml_polly_ctl(value val_epfd, value val_fd, value val_events, int op)
 		.data.fd = Int_val(val_fd)
 	};
 
-	if (epoll_ctl(Int_val(val_epfd), op, Int_val(val_fd), &event) == -1)
+	int epfd_c = Int_val(val_epfd);
+	int fd_c = Int_val(val_fd);
+	int rc;
+
+	caml_release_runtime_system();
+	rc = epoll_ctl(epfd_c, op, fd_c, &event);
+	caml_acquire_runtime_system();
+
+	if (rc == -1)
 		uerror(__FUNCTION__, Nothing);
 
 	CAMLreturn(Val_unit);
@@ -80,10 +79,13 @@ caml_polly_wait(value val_epfd, value val_max, value val_timeout, value val_f)
 	    (struct epoll_event *)alloca(Int_val(val_max) *
 					 sizeof(struct epoll_event));
 
-	caml_enter_blocking_section();
-	ready = epoll_wait(Int_val(val_epfd), events, Int_val(val_max),
-			   Int_val(val_timeout));
-	caml_leave_blocking_section();
+	int epfd_c = Int_val(val_epfd);
+	int max_c = Int_val(val_max);
+	int timeout_c = Int_val(val_timeout);
+
+	caml_release_runtime_system();
+	ready = epoll_wait(epfd_c, events, max_c, timeout_c);
+	caml_acquire_runtime_system();
 
 	if (ready == -1)
 		uerror(__FUNCTION__, Nothing);
@@ -118,10 +120,13 @@ caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 	    (struct epoll_event *)alloca(Int_val(val_max) *
 					 sizeof(struct epoll_event));
 
-	caml_enter_blocking_section();
-	ready = epoll_wait(Int_val(val_epfd), events, Int_val(val_max),
-			   Int_val(val_timeout));
-	caml_leave_blocking_section();
+	int epfd_c = Int_val(val_epfd);
+	int max_c = Int_val(val_max);
+	int timeout_c = Int_val(val_timeout);
+
+	caml_release_runtime_system();
+	ready = epoll_wait(epfd_c, events, max_c, timeout_c);
+	caml_acquire_runtime_system();
 
 	if (ready == -1)
 		uerror(__FUNCTION__, Nothing);
@@ -140,7 +145,12 @@ caml_polly_wait_fold(value val_epfd, value val_max, value val_timeout,
 CAMLprim value caml_polly_eventfd(value initval, value flags)
 {
 	CAMLparam0();
-	int sock = eventfd(Int_val(initval), Int_val(flags));
+
+	int init_c = Int_val(initval);
+	int flags_c = Int_val(flags);
+	caml_release_runtime_system();
+	int sock = eventfd(init_c, flags_c);
+	caml_acquire_runtime_system();
 	if (-1 == sock)
 		uerror(__FUNCTION__, Nothing);
 	CAMLreturn(Val_int(sock));
